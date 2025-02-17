@@ -23,7 +23,26 @@ function initYoutubePlayers() {
         const playerId = `bortelaget-player-${index}`;
         iframe.id = playerId;
 
+        // Initialize with full player parameters
         players[playerId] = new YT.Player(playerId, {
+            host: 'https://www.youtube-nocookie.com',
+            playerVars: {
+                'controls': 0,
+                'modestbranding': 1,
+                'showinfo': 0,
+                'rel': 0,
+                'iv_load_policy': 3,
+                'fs': 0,
+                'playsinline': 1,
+                'disablekb': 1,
+                'autoplay': 1,
+                'mute': 1,
+                'loop': 0,
+                'cc_load_policy': 0,
+                'origin': window.location.origin,
+                'widget_referrer': window.location.href,
+                'start': 1
+            },
             events: {
                 'onReady': (event) => {
                     console.log('Player ready for ID:', playerId);

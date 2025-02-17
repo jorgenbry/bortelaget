@@ -12,24 +12,33 @@ button {
 }
 
 // YouTube player container
-.bortelaget-player {
+.player {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
   overflow: hidden;
-  background: #000; /* Add background color to see container */
+  background: #000;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
 
   // Hide YouTube UI elements
-  .ytp-chrome-top,           // Video title bar
-  .ytp-chrome-bottom,        // Control bar
-  .ytp-gradient-top,         // Top gradient
-  .ytp-gradient-bottom,      // Bottom gradient
-  .ytp-watermark,           // YouTube logo
-  .ytp-large-play-button,   // Big play button
-  .ytp-youtube-button,      // YouTube button
-  .ytp-watch-later-button,  // Watch later button
-  .ytp-share-button {       // Share button
+  .ytp-chrome-top,
+  .ytp-chrome-bottom,
+  .ytp-gradient-top,
+  .ytp-gradient-bottom,
+  .ytp-watermark,
+  .ytp-large-play-button,
+  .ytp-youtube-button,
+  .ytp-watch-later-button,
+  .ytp-share-button {
     display: none !important;
   }
 }

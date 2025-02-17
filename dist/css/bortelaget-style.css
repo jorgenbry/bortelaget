@@ -10,23 +10,31 @@ button {
   font-family: "STK Bureau Sans", sans-serif;
 }
 
-.bortelaget-player {
+.player {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
   overflow: hidden;
-  background: #000; /* Add background color to see container */
+  background: #000;
 }
-.bortelaget-player .ytp-chrome-top,
-.bortelaget-player .ytp-chrome-bottom,
-.bortelaget-player .ytp-gradient-top,
-.bortelaget-player .ytp-gradient-bottom,
-.bortelaget-player .ytp-watermark,
-.bortelaget-player .ytp-large-play-button,
-.bortelaget-player .ytp-youtube-button,
-.bortelaget-player .ytp-watch-later-button,
-.bortelaget-player .ytp-share-button {
+.player iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.player .ytp-chrome-top,
+.player .ytp-chrome-bottom,
+.player .ytp-gradient-top,
+.player .ytp-gradient-bottom,
+.player .ytp-watermark,
+.player .ytp-large-play-button,
+.player .ytp-youtube-button,
+.player .ytp-watch-later-button,
+.player .ytp-share-button {
   display: none !important;
 }
 

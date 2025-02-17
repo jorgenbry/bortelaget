@@ -5,7 +5,6 @@
 // Store all players in an object
 let players = {};
 
-// Debug loading
 console.log('Script loaded');
 
 // Initialize players for all YouTube embeds on the page
@@ -21,7 +20,10 @@ function initYoutubePlayers() {
         if (!videoId) return;
 
         const iframe = container.querySelector('iframe');
-        if (!iframe) return;
+        if (!iframe) {
+            console.error('No iframe found in container:', container);
+            return;
+        }
 
         const playerId = `bortelaget-player-${index}`;
         iframe.id = playerId;
@@ -49,6 +51,12 @@ function initYoutubePlayers() {
                 'onReady': (event) => {
                     console.log('Player ready for ID:', playerId);
                     setupPlayerControls(event.target, container);
+                },
+                'onStateChange': (event) => {
+                    console.log('Player state changed:', event.data);
+                },
+                'onError': (event) => {
+                    console.error('Player error:', event.data);
                 }
             }
         });
@@ -56,53 +64,67 @@ function initYoutubePlayers() {
 }
 
 function setupPlayerControls(player, container) {
+    console.log('Setting up controls for container:', container);
+    
     // Get all button elements
     const playIcon = container.querySelector('.play-button');
     const pauseIcon = container.querySelector('.pause-button');
     const soundOnIcon = container.querySelector('.sound-on-button');
     const soundOffIcon = container.querySelector('.sound-off-button');
 
+    console.log('Found buttons:', {
+        playIcon: !!playIcon,
+        pauseIcon: !!pauseIcon,
+        soundOnIcon: !!soundOnIcon,
+        soundOffIcon: !!soundOffIcon
+    });
+
     // Initially hide pause icon and show play icon
     if (playIcon && pauseIcon) {
+        console.log('Setting up play/pause buttons');
         // Video autoplays, so initially show pause
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'block';
 
         // Setup play/pause toggle
-        [playIcon, pauseIcon].forEach(button => {
-            button.addEventListener('click', () => {
-                if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-                    player.pauseVideo();
-                    playIcon.style.display = 'block';
-                    pauseIcon.style.display = 'none';
-                } else {
-                    player.playVideo();
-                    playIcon.style.display = 'none';
-                    pauseIcon.style.display = 'block';
-                }
-            });
+        playIcon.addEventListener('click', () => {
+            console.log('Play clicked');
+            player.playVideo();
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
         });
+
+        pauseIcon.addEventListener('click', () => {
+            console.log('Pause clicked');
+            player.pauseVideo();
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+        });
+    } else {
+        console.error('Play/Pause buttons not found');
     }
 
     // Initially show sound-off icon (video starts muted)
     if (soundOnIcon && soundOffIcon) {
+        console.log('Setting up sound buttons');
         soundOnIcon.style.display = 'none';
         soundOffIcon.style.display = 'block';
 
-        // Setup sound toggle
-        [soundOnIcon, soundOffIcon].forEach(button => {
-            button.addEventListener('click', () => {
-                if (player.isMuted()) {
-                    player.unMute();
-                    soundOnIcon.style.display = 'block';
-                    soundOffIcon.style.display = 'none';
-                } else {
-                    player.mute();
-                    soundOnIcon.style.display = 'none';
-                    soundOffIcon.style.display = 'block';
-                }
-            });
+        soundOnIcon.addEventListener('click', () => {
+            console.log('Sound On clicked');
+            player.mute();
+            soundOnIcon.style.display = 'none';
+            soundOffIcon.style.display = 'block';
         });
+
+        soundOffIcon.addEventListener('click', () => {
+            console.log('Sound Off clicked');
+            player.unMute();
+            soundOnIcon.style.display = 'block';
+            soundOffIcon.style.display = 'none';
+        });
+    } else {
+        console.error('Sound buttons not found');
     }
 }
 

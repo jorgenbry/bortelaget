@@ -1,3 +1,4 @@
+// Global text styling
 p, 
 span, 
 div, 
@@ -11,37 +12,16 @@ button {
 }
 
 // YouTube player container
-.bortelaget-player,
-[data-video-id] {
+.bortelaget-player {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
-
-  iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
+  overflow: hidden;
+  background: #000; /* Add background color to see container */
 }
 
-// Youtube Player
-
-.player {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* This maintains 16:9 aspect ratio */
-  height: 0;
-  iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
+// YouTube player container
   .ytp-chrome-top,           /* Hides the top bar with title */
   .ytp-chrome-bottom,        /* Hides the bottom control bar */
   .ytp-watermark,           /* Hides YouTube logo */
@@ -50,4 +30,3 @@ button {
   {
       display: none !important;
   }
-}

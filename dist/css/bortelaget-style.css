@@ -10,41 +10,20 @@ button {
   font-family: "STK Bureau Sans", sans-serif;
 }
 
-.bortelaget-player,
-[data-video-id] {
+.bortelaget-player {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
-}
-.bortelaget-player iframe,
-[data-video-id] iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
+  overflow: hidden;
+  background: #000; /* Add background color to see container */
 }
 
-.player {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* This maintains 16:9 aspect ratio */
-  height: 0;
-}
-.player iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-.player .ytp-chrome-top,
-.player .ytp-chrome-bottom,
-.player .ytp-watermark,
-.player .ytp-share-button,
-.player .ytp-watch-later-button {
+.ytp-chrome-top,
+.ytp-chrome-bottom,
+.ytp-watermark,
+.ytp-share-button,
+.ytp-watch-later-button {
   display: none !important;
 }
 

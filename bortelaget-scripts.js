@@ -20,61 +20,14 @@ function initYoutubePlayers() {
         
         if (!videoId) return;
 
-        // Set up all possible parameters to hide UI elements
-        const params = new URLSearchParams({
-            enablejsapi: '1',
-            controls: '0',
-            modestbranding: '1',
-            showinfo: '0',
-            rel: '0',
-            iv_load_policy: '3',
-            fs: '0',
-            playsinline: '1',
-            disablekb: '1',
-            origin: window.location.origin,
-            autoplay: '1',
-            mute: '1',
-            loop: '0',
-            cc_load_policy: '0',
-            color: 'white',
-            playlist: videoId,
-            widget_referrer: window.location.href,
-            autohide: '1',
-            version: '3',  // Use latest API version
-            ecver: '2'     // Enhanced privacy mode
-        });
-        
-        // Force the iframe to use our parameters
-        iframe.src = `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
-        
         const playerId = `bortelaget-player-${index}`;
         iframe.id = playerId;
 
         players[playerId] = new YT.Player(playerId, {
-            playerVars: {
-                'controls': 0,
-                'modestbranding': 1,
-                'showinfo': 0,
-                'rel': 0,
-                'iv_load_policy': 3,
-                'fs': 0,
-                'playsinline': 1,
-                'disablekb': 1,
-                'cc_load_policy': 0,
-                'autohide': 1,
-                'autoplay': 1,
-                'mute': 1
-            },
             events: {
                 'onReady': (event) => {
                     console.log('Player ready for ID:', playerId);
                     setupPlayerControls(event.target, playerId);
-                },
-                'onStateChange': (event) => {
-                    console.log('Player state changed:', event.data);
-                },
-                'onError': (event) => {
-                    console.error('Player error:', event.data);
                 }
             }
         });

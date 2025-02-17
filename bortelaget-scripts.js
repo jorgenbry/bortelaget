@@ -34,43 +34,60 @@ function attachButtonHandlers() {
     buttons.soundOff.style.display = 'none';
 
     // Add click handlers
-    buttons.play.addEventListener('click', function(e) {
-        console.log('Play clicked');
-        e.stopPropagation();
-        if (players.player && isPlayerReady) {
-            players.player.playVideo();
-            buttons.play.style.display = 'none';
-            buttons.pause.style.display = 'flex';
-        }
-    });
-
     buttons.pause.addEventListener('click', function(e) {
         console.log('Pause clicked');
         e.stopPropagation();
-        if (players.player && isPlayerReady) {
+        if (players.player) {
+            console.log('Attempting to pause video');
             players.player.pauseVideo();
-            buttons.play.style.display = 'flex';
+            console.log('Current player state:', players.player.getPlayerState());
             buttons.pause.style.display = 'none';
+            buttons.play.style.display = 'flex';
+        } else {
+            console.log('Player not found');
+        }
+    });
+
+    buttons.play.addEventListener('click', function(e) {
+        console.log('Play clicked');
+        e.stopPropagation();
+        if (players.player) {
+            console.log('Attempting to play video');
+            players.player.playVideo();
+            console.log('Current player state:', players.player.getPlayerState());
+            buttons.play.style.display = 'none';
+            buttons.pause.style.display = 'flex';
+        } else {
+            console.log('Player not found');
         }
     });
 
     buttons.soundOn.addEventListener('click', function(e) {
         console.log('Sound On clicked');
         e.stopPropagation();
-        if (players.player && isPlayerReady) {
+        if (players.player) {
+            console.log('Attempting to unmute');
             players.player.unMute();
+            players.player.setVolume(100);
+            console.log('Is muted:', players.player.isMuted());
             buttons.soundOn.style.display = 'none';
             buttons.soundOff.style.display = 'flex';
+        } else {
+            console.log('Player not found');
         }
     });
 
     buttons.soundOff.addEventListener('click', function(e) {
         console.log('Sound Off clicked');
         e.stopPropagation();
-        if (players.player && isPlayerReady) {
+        if (players.player) {
+            console.log('Attempting to mute');
             players.player.mute();
-            buttons.soundOn.style.display = 'flex';
+            console.log('Is muted:', players.player.isMuted());
             buttons.soundOff.style.display = 'none';
+            buttons.soundOn.style.display = 'flex';
+        } else {
+            console.log('Player not found');
         }
     });
 
@@ -97,23 +114,18 @@ function initYoutubePlayer() {
     iframe.id = 'bortelaget-player';
     
     players.player = new YT.Player('bortelaget-player', {
-        videoId: videoId,
-        playerVars: {
-            'autoplay': 1,
-            'controls': 0,
-            'modestbranding': 1,
-            'showinfo': 0,
-            'rel': 0,
-            'iv_load_policy': 3,
-            'fs': 0,
-            'playsinline': 1,
-            'disablekb': 1,
-            'mute': 1
-        },
         events: {
             'onReady': (event) => {
                 console.log('Player ready');
                 isPlayerReady = true;
+                // Store the player instance
+                players.player = event.target;
+                console.log('Player methods available:', 
+                    'playVideo:', !!players.player.playVideo,
+                    'pauseVideo:', !!players.player.pauseVideo,
+                    'mute:', !!players.player.mute,
+                    'unMute:', !!players.player.unMute
+                );
             },
             'onStateChange': (event) => {
                 console.log('Player state changed:', event.data);

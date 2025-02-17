@@ -2,17 +2,11 @@
     $('.w-nav-button').trigger('click');
     });
 
-// Store player and buttons globally
-let player = null;
+// Store buttons globally
 let buttons = null;
-
-console.log('Script loaded');
 
 // Find and set up buttons
 function setupButtons() {
-    console.log('Setting up buttons');
-    
-    // Find all buttons
     buttons = {
         play: document.querySelector('.play-button'),
         pause: document.querySelector('.pause-button'),
@@ -20,38 +14,20 @@ function setupButtons() {
         soundOff: document.querySelector('.sound-off-button')
     };
 
-    // Verify buttons were found
-    Object.entries(buttons).forEach(([key, button]) => {
-        console.log(`${key} button found:`, !!button);
-    });
-
     // Set initial visibility
     if (buttons.play) buttons.play.style.display = 'none';
     if (buttons.pause) buttons.pause.style.display = 'flex';
     if (buttons.soundOn) buttons.soundOn.style.display = 'flex';
     if (buttons.soundOff) buttons.soundOff.style.display = 'none';
-
-    console.log('Initial button setup complete');
 }
 
 // Initialize YouTube player
 function initYoutubePlayer() {
-    console.log('Initializing YouTube player');
     const container = document.querySelector('div[data-video-id]');
-    
-    if (!container) {
-        console.error('Video container not found');
-        return;
-    }
-
-    const videoId = container.getAttribute('data-video-id');
-    console.log('Video ID:', videoId);
+    if (!container) return;
 
     const iframe = container.querySelector('iframe');
-    if (!iframe) {
-        console.error('Iframe not found');
-        return;
-    }
+    if (!iframe) return;
 
     // Update iframe src to enable API
     let srcUrl = new URL(iframe.src);
@@ -62,7 +38,6 @@ function initYoutubePlayer() {
     // Set up button click handlers
     if (buttons.pause) {
         buttons.pause.onclick = function() {
-            console.log('Pause clicked');
             iframe.contentWindow.postMessage(JSON.stringify({
                 event: 'command',
                 func: 'pauseVideo'
@@ -74,7 +49,6 @@ function initYoutubePlayer() {
 
     if (buttons.play) {
         buttons.play.onclick = function() {
-            console.log('Play clicked');
             iframe.contentWindow.postMessage(JSON.stringify({
                 event: 'command',
                 func: 'playVideo'
@@ -86,7 +60,6 @@ function initYoutubePlayer() {
 
     if (buttons.soundOn) {
         buttons.soundOn.onclick = function() {
-            console.log('Sound On clicked');
             iframe.contentWindow.postMessage(JSON.stringify({
                 event: 'command',
                 func: 'unMute'
@@ -103,7 +76,6 @@ function initYoutubePlayer() {
 
     if (buttons.soundOff) {
         buttons.soundOff.onclick = function() {
-            console.log('Sound Off clicked');
             iframe.contentWindow.postMessage(JSON.stringify({
                 event: 'command',
                 func: 'mute'
@@ -112,15 +84,6 @@ function initYoutubePlayer() {
             buttons.soundOn.style.display = 'flex';
         };
     }
-
-    // Listen for messages from the iframe
-    window.addEventListener('message', function(event) {
-        if (event.source === iframe.contentWindow) {
-            console.log('Received message from player:', event.data);
-        }
-    });
-
-    console.log('Player controls attached');
 }
 
 // Set up buttons immediately
@@ -128,7 +91,6 @@ setupButtons();
 
 // Initialize player when API is ready
 function onYouTubeIframeAPIReady() {
-    console.log('YouTube API is ready');
     initYoutubePlayer();
 }
 

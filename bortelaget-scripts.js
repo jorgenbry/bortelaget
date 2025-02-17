@@ -28,47 +28,54 @@ function initYoutubePlayers() {
         // Initialize player using the existing iframe
         players[playerId] = new YT.Player(playerId, {
             events: {
-                'onReady': onPlayerReady
+                'onReady': function(event) {
+                    onPlayerReady(event, playerId);
+                }
             }
         });
     });
 }
 
-function onPlayerReady(event) {
-    console.log('Player ready:', event);
+function onPlayerReady(event, playerId) {
+    console.log('Player ready:', playerId);
+    
+    // Add click handlers for this specific player's controls
+    const playerContainer = document.getElementById(playerId).closest('[data-video-id]');
+    if (!playerContainer) return;
+    
+    const playButton = playerContainer.querySelector('.play-button');
+    const pauseButton = playerContainer.querySelector('.pause-button');
+    const muteButton = playerContainer.querySelector('.mute-button');
+    
+    if (playButton) {
+        playButton.addEventListener('click', () => {
+            players[playerId].playVideo();
+        });
+    }
+    
+    if (pauseButton) {
+        pauseButton.addEventListener('click', () => {
+            players[playerId].pauseVideo();
+        });
+    }
+    
+    if (muteButton) {
+        muteButton.addEventListener('click', () => {
+            if (players[playerId].isMuted()) {
+                players[playerId].unMute();
+                muteButton.textContent = 'Mute';
+            } else {
+                players[playerId].mute();
+                muteButton.textContent = 'Unmute';
+            }
+        });
+    }
 }
 
 // When YouTube API is ready, initialize all players
 function onYouTubeIframeAPIReady() {
     console.log('YouTube API Ready');
     initYoutubePlayers();
-    
-    // Add click handlers for custom controls
-    document.addEventListener('click', function(e) {
-        // Find the closest player container
-        const container = e.target.closest('[data-video-id]');
-        if (!container) return;
-        
-        const playerId = container.querySelector('iframe').id;
-        const player = players[playerId];
-        
-        // Handle different control buttons
-        if (e.target.matches('.play-button')) {
-            player.playVideo();
-        }
-        else if (e.target.matches('.pause-button')) {
-            player.pauseVideo();
-        }
-        else if (e.target.matches('.mute-button')) {
-            if (player.isMuted()) {
-                player.unMute();
-                e.target.textContent = 'Mute';
-            } else {
-                player.mute();
-                e.target.textContent = 'Unmute';
-            }
-        }
-    });
 }
 
 // Additional debug

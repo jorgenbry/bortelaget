@@ -10,7 +10,6 @@ console.log('Script loaded');
 // Initialize players for all YouTube embeds on the page
 function initYoutubePlayers() {
     console.log('Initializing players');
-    // Only select the parent container
     const playerContainers = document.querySelectorAll('div[data-video-id]');
     console.log('Found containers:', playerContainers.length);
     
@@ -30,7 +29,7 @@ function initYoutubePlayers() {
         iframe.id = playerId;
         console.log('Created player ID:', playerId);
 
-        // Find control buttons before initializing player
+        // Find control buttons
         const buttons = {
             play: container.parentElement.querySelector('.play-button'),
             pause: container.parentElement.querySelector('.pause-button'),
@@ -48,61 +47,82 @@ function initYoutubePlayers() {
         // Set initial button states
         if (buttons.play) buttons.play.style.display = 'none';
         if (buttons.pause) buttons.pause.style.display = 'flex';
-        if (buttons.soundOn) buttons.soundOn.style.display = 'none';
-        if (buttons.soundOff) buttons.soundOff.style.display = 'flex';
+        // Reversed sound icon logic since video starts muted
+        if (buttons.soundOn) buttons.soundOn.style.display = 'flex';
+        if (buttons.soundOff) buttons.soundOff.style.display = 'none';
 
         players[playerId] = new YT.Player(playerId, {
             events: {
                 'onReady': (event) => {
                     console.log('Player ready for ID:', playerId);
-                    setupPlayerControls(event.target, buttons);
+                    setupPlayerControls(event.target, buttons, playerId);
                 },
                 'onStateChange': (event) => {
-                    console.log('Player state changed:', event.data);
+                    console.log('Player state changed for ID:', playerId, 'State:', event.data);
                 },
                 'onError': (event) => {
-                    console.error('Player error:', event.data);
+                    console.error('Player error for ID:', playerId, 'Error:', event.data);
                 }
             }
         });
     });
 }
 
-function setupPlayerControls(player, buttons) {
-    console.log('Setting up controls with buttons:', buttons);
+function setupPlayerControls(player, buttons, playerId) {
+    console.log('Setting up controls for player:', playerId);
 
     // Setup play/pause toggle
     if (buttons.play && buttons.pause) {
-        buttons.play.addEventListener('click', () => {
-            console.log('Play clicked');
-            player.playVideo();
-            buttons.play.style.display = 'none';
-            buttons.pause.style.display = 'flex';
-        });
+        buttons.play.onclick = () => {
+            console.log('Play clicked for:', playerId);
+            try {
+                player.playVideo();
+                console.log('Play command sent');
+                buttons.play.style.display = 'none';
+                buttons.pause.style.display = 'flex';
+            } catch (e) {
+                console.error('Error playing video:', e);
+            }
+        };
 
-        buttons.pause.addEventListener('click', () => {
-            console.log('Pause clicked');
-            player.pauseVideo();
-            buttons.play.style.display = 'flex';
-            buttons.pause.style.display = 'none';
-        });
+        buttons.pause.onclick = () => {
+            console.log('Pause clicked for:', playerId);
+            try {
+                player.pauseVideo();
+                console.log('Pause command sent');
+                buttons.play.style.display = 'flex';
+                buttons.pause.style.display = 'none';
+            } catch (e) {
+                console.error('Error pausing video:', e);
+            }
+        };
     }
 
     // Setup sound toggle
     if (buttons.soundOn && buttons.soundOff) {
-        buttons.soundOn.addEventListener('click', () => {
-            console.log('Sound On clicked');
-            player.mute();
-            buttons.soundOn.style.display = 'none';
-            buttons.soundOff.style.display = 'flex';
-        });
+        buttons.soundOn.onclick = () => {
+            console.log('Sound On clicked for:', playerId);
+            try {
+                player.unMute();
+                console.log('Unmute command sent');
+                buttons.soundOn.style.display = 'none';
+                buttons.soundOff.style.display = 'flex';
+            } catch (e) {
+                console.error('Error unmuting video:', e);
+            }
+        };
 
-        buttons.soundOff.addEventListener('click', () => {
-            console.log('Sound Off clicked');
-            player.unMute();
-            buttons.soundOn.style.display = 'flex';
-            buttons.soundOff.style.display = 'none';
-        });
+        buttons.soundOff.onclick = () => {
+            console.log('Sound Off clicked for:', playerId);
+            try {
+                player.mute();
+                console.log('Mute command sent');
+                buttons.soundOn.style.display = 'flex';
+                buttons.soundOff.style.display = 'none';
+            } catch (e) {
+                console.error('Error muting video:', e);
+            }
+        };
     }
 }
 

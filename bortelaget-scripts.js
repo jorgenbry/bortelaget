@@ -20,40 +20,30 @@ function initYoutubePlayers() {
         
         if (!videoId) return;
 
+        // First, set the correct source with all parameters
+        const params = new URLSearchParams({
+            enablejsapi: '1',
+            controls: '0',
+            modestbranding: '1',
+            showinfo: '0',
+            rel: '0',
+            iv_load_policy: '3',
+            fs: '0',
+            playsinline: '1',
+            disablekb: '1',
+            origin: window.location.origin
+        });
+        
+        iframe.src = `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+        
         const playerId = `bortelaget-player-${index}`;
         iframe.id = playerId;
 
-        // Log iframe properties
-        console.log('Iframe current state:', {
-            id: iframe.id,
-            src: iframe.src,
-            width: iframe.style.width,
-            height: iframe.style.height,
-            visibility: getComputedStyle(iframe).visibility,
-            display: getComputedStyle(iframe).display
-        });
-
         players[playerId] = new YT.Player(playerId, {
-            videoId: videoId,
-            playerVars: {
-                'controls': 0,            // Hide all controls
-                'modestbranding': 1,      // Hide most YouTube branding
-                'showinfo': 0,            // Hide video title and uploader
-                'rel': 0,                 // Hide related videos
-                'iv_load_policy': 3,      // Hide video annotations
-                'fs': 0,                  // Hide fullscreen button
-                'disablekb': 1,           // Disable keyboard controls
-                'playsinline': 1,         // Play inline on mobile
-                'origin': window.location.origin,
-                'enablejsapi': 1,
-                'widget_referrer': window.location.href,
-                'cc_load_policy': 0,      // Hide closed captions
-                'autohide': 1             // Hide video controls when playing
-            },
             events: {
                 'onReady': (event) => {
                     console.log('Player ready for ID:', playerId);
-                    onPlayerReady(event, playerId);
+                    setupPlayerControls(event.target, playerId);
                 },
                 'onStateChange': (event) => {
                     console.log('Player state changed:', event.data);
@@ -66,25 +56,43 @@ function initYoutubePlayers() {
     });
 }
 
-function onPlayerReady(event, playerId) {
-    const playerContainer = document.getElementById(playerId).closest('[data-video-id]');
-    if (!playerContainer) return;
-    
-    const playButton = playerContainer.querySelector('.play-button');
-    const pauseButton = playerContainer.querySelector('.pause-button');
-    
+function setupPlayerControls(player, playerId) {
+    // Find the closest container with player controls
+    const container = document.getElementById(playerId).closest('.player');
+    if (!container) {
+        console.error('Could not find container for player:', playerId);
+        return;
+    }
+
+    const playButton = container.querySelector('.play-button');
+    const pauseButton = container.querySelector('.pause-button');
+
     if (playButton) {
         playButton.addEventListener('click', () => {
-            console.log('Play clicked');
-            players[playerId].playVideo();
+            console.log('Play clicked for:', playerId);
+            try {
+                player.playVideo();
+                console.log('Play command sent');
+            } catch (e) {
+                console.error('Error playing video:', e);
+            }
         });
+    } else {
+        console.error('Play button not found for:', playerId);
     }
-    
+
     if (pauseButton) {
         pauseButton.addEventListener('click', () => {
-            console.log('Pause clicked');
-            players[playerId].pauseVideo();
+            console.log('Pause clicked for:', playerId);
+            try {
+                player.pauseVideo();
+                console.log('Pause command sent');
+            } catch (e) {
+                console.error('Error pausing video:', e);
+            }
         });
+    } else {
+        console.error('Pause button not found for:', playerId);
     }
 }
 

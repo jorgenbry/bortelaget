@@ -26,16 +26,36 @@ button {
   height: 100%;
   border: none;
 }
-.player .ytp-chrome-top,
-.player .ytp-chrome-bottom,
-.player .ytp-gradient-top,
-.player .ytp-gradient-bottom,
-.player .ytp-watermark,
-.player .ytp-large-play-button,
-.player .ytp-youtube-button,
-.player .ytp-watch-later-button,
-.player .ytp-share-button {
+
+iframe[data-video-id] .ytp-chrome-top,
+iframe[data-video-id] .ytp-chrome-bottom,
+iframe[data-video-id] .ytp-gradient-top,
+iframe[data-video-id] .ytp-gradient-bottom,
+iframe[data-video-id] .ytp-watermark,
+iframe[data-video-id] .ytp-large-play-button,
+iframe[data-video-id] .ytp-youtube-button,
+iframe[data-video-id] .ytp-watch-later-button,
+iframe[data-video-id] .ytp-share-button,
+iframe[data-video-id] .ytp-title,
+iframe[data-video-id] .ytp-show-cards-title,
+iframe[data-video-id] .ytp-cards-button,
+iframe[data-video-id] .ytp-pause-overlay,
+iframe[data-video-id] .ytp-menuitem,
+iframe[data-video-id] .ytp-ce-element {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.player::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
 /*# sourceMappingURL=bortelaget-style.css.map */

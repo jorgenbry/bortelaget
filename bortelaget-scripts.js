@@ -39,7 +39,9 @@ function initYoutubePlayers() {
             color: 'white',
             playlist: videoId,
             widget_referrer: window.location.href,
-            autohide: '1'
+            autohide: '1',
+            version: '3',  // Use latest API version
+            ecver: '2'     // Enhanced privacy mode
         });
         
         // Force the iframe to use our parameters

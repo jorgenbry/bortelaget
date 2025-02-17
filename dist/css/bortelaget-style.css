@@ -16,7 +16,6 @@ button {
   width: 100%;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
-  overflow: hidden;
 }
 .bortelaget-player iframe,
 [data-video-id] iframe {
@@ -33,7 +32,6 @@ button {
   width: 100%;
   padding-bottom: 56.25%; /* This maintains 16:9 aspect ratio */
   height: 0;
-  overflow: hidden;
 }
 .player iframe {
   position: absolute;

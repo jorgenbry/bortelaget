@@ -17,7 +17,6 @@ button {
   width: 100%;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
-  overflow: hidden;
 
   iframe {
     position: absolute;
@@ -36,7 +35,6 @@ button {
   width: 100%;
   padding-bottom: 56.25%; /* This maintains 16:9 aspect ratio */
   height: 0;
-  overflow: hidden;
   iframe {
     position: absolute;
     top: 0;

@@ -4,23 +4,19 @@
 
 // Initialize players for all YouTube embeds on the page
 function initYoutubePlayers() {
-    // Find all elements with class 'bortelaget-player'
-    const playerContainers = document.querySelectorAll('[data-video-id]');
+    // Find all iframes with data-video-id
+    const playerIframes = document.querySelectorAll('iframe[data-video-id]');
     
-    playerContainers.forEach((container, index) => {
+    playerIframes.forEach((iframe, index) => {
         // Get video ID from data attribute
-        const videoId = container.getAttribute('data-video-id');
+        const videoId = iframe.getAttribute('data-video-id');
         if (!videoId) return;
 
         // Create a unique ID for each player
         const playerId = `bortelaget-player-${index}`;
-        
-        // Create a div for the player
-        const playerDiv = document.createElement('div');
-        playerDiv.id = playerId;
-        container.appendChild(playerDiv);
+        iframe.id = playerId;
 
-        // Initialize player
+        // Initialize player using the existing iframe
         new YT.Player(playerId, {
             videoId: videoId,
             playerVars: {

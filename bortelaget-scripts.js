@@ -5,7 +5,7 @@
 // Initialize players for all YouTube embeds on the page
 function initYoutubePlayers() {
     // Find all elements with class 'bortelaget-player'
-    const playerContainers = document.querySelectorAll('.bortelaget-player');
+    const playerContainers = document.querySelectorAll('[data-video-id]');
     
     playerContainers.forEach((container, index) => {
         // Get video ID from data attribute
@@ -14,7 +14,11 @@ function initYoutubePlayers() {
 
         // Create a unique ID for each player
         const playerId = `bortelaget-player-${index}`;
-        container.id = playerId;
+        
+        // Create a div for the player
+        const playerDiv = document.createElement('div');
+        playerDiv.id = playerId;
+        container.appendChild(playerDiv);
 
         // Initialize player
         new YT.Player(playerId, {

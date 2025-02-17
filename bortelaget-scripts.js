@@ -29,21 +29,22 @@ function initYoutubePlayers() {
         iframe.id = playerId;
         console.log('Created player ID:', playerId);
 
-        // Find control buttons
+        // Find control buttons using exact classes
+        const controlsContainer = container.parentElement.querySelector('.player-control-buttons');
         const buttons = {
-            play: document.querySelector('.play-button'),
-            pause: document.querySelector('.pause-button'),
-            soundOn: document.querySelector('.sound-on-button'),
-            soundOff: document.querySelector('.sound-off-button')
+            play: controlsContainer.querySelector('.button.player-button.play-button'),
+            pause: controlsContainer.querySelector('.button.player-button.pause-button'),
+            soundOn: controlsContainer.querySelector('.button.player-button.sound-on-button'),
+            soundOff: controlsContainer.querySelector('.button.player-button.sound-off-button')
         };
 
         console.log('Found buttons:', buttons);
 
         // Set initial states
-        buttons.play.style.cssText = 'display: none !important';
-        buttons.pause.style.cssText = 'display: flex !important';
-        buttons.soundOn.style.cssText = 'display: flex !important';
-        buttons.soundOff.style.cssText = 'display: none !important';
+        buttons.play.style.display = 'none';
+        buttons.pause.style.display = 'flex';
+        buttons.soundOn.style.display = 'flex';
+        buttons.soundOff.style.display = 'none';
 
         players[playerId] = new YT.Player(playerId, {
             videoId: videoId,
@@ -82,34 +83,34 @@ function setupPlayerControls(player, buttons, playerId) {
     console.log('Setting up controls for player:', playerId);
 
     // Setup play/pause toggle
-    buttons.play.addEventListener('click', function() {
+    buttons.play.onclick = function() {
         console.log('Play clicked for:', playerId);
         player.playVideo();
-        buttons.play.style.cssText = 'display: none !important';
-        buttons.pause.style.cssText = 'display: flex !important';
-    });
+        buttons.play.style.display = 'none';
+        buttons.pause.style.display = 'flex';
+    };
 
-    buttons.pause.addEventListener('click', function() {
+    buttons.pause.onclick = function() {
         console.log('Pause clicked for:', playerId);
         player.pauseVideo();
-        buttons.play.style.cssText = 'display: flex !important';
-        buttons.pause.style.cssText = 'display: none !important';
-    });
+        buttons.play.style.display = 'flex';
+        buttons.pause.style.display = 'none';
+    };
 
     // Setup sound toggle
-    buttons.soundOn.addEventListener('click', function() {
+    buttons.soundOn.onclick = function() {
         console.log('Sound On clicked for:', playerId);
         player.unMute();
-        buttons.soundOn.style.cssText = 'display: none !important';
-        buttons.soundOff.style.cssText = 'display: flex !important';
-    });
+        buttons.soundOn.style.display = 'none';
+        buttons.soundOff.style.display = 'flex';
+    };
 
-    buttons.soundOff.addEventListener('click', function() {
+    buttons.soundOff.onclick = function() {
         console.log('Sound Off clicked for:', playerId);
         player.mute();
-        buttons.soundOn.style.cssText = 'display: flex !important';
-        buttons.soundOff.style.cssText = 'display: none !important';
-    });
+        buttons.soundOn.style.display = 'flex';
+        buttons.soundOff.style.display = 'none';
+    };
 
     console.log('Control setup complete for:', playerId);
 }

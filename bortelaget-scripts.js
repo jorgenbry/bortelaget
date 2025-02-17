@@ -23,12 +23,6 @@ function setupButtons() {
     // Verify buttons were found
     Object.entries(buttons).forEach(([key, button]) => {
         console.log(`${key} button found:`, !!button);
-        if (button) {
-            // Add a test click handler to verify event binding
-            button.addEventListener('click', () => {
-                console.log(`Test click on ${key} button`);
-            });
-        }
     });
 
     // Set initial visibility
@@ -59,65 +53,59 @@ function initYoutubePlayer() {
         return;
     }
 
-    iframe.id = 'bortelaget-player';
-    
-    // Create new YT.Player instance
-    player = new YT.Player('bortelaget-player', {
-        events: {
-            'onReady': function(event) {
-                console.log('YouTube player is ready');
-                
-                // Store player reference
-                player = event.target;
-                
-                // Add real click handlers
-                if (buttons.pause) {
-                    buttons.pause.onclick = function() {
-                        console.log('Pause clicked - executing pauseVideo()');
-                        player.pauseVideo();
-                        buttons.pause.style.display = 'none';
-                        buttons.play.style.display = 'flex';
-                    };
-                }
-
-                if (buttons.play) {
-                    buttons.play.onclick = function() {
-                        console.log('Play clicked - executing playVideo()');
-                        player.playVideo();
-                        buttons.play.style.display = 'none';
-                        buttons.pause.style.display = 'flex';
-                    };
-                }
-
-                if (buttons.soundOn) {
-                    buttons.soundOn.onclick = function() {
-                        console.log('Sound On clicked - executing unMute()');
-                        player.unMute();
-                        player.setVolume(100);
-                        buttons.soundOn.style.display = 'none';
-                        buttons.soundOff.style.display = 'flex';
-                    };
-                }
-
-                if (buttons.soundOff) {
-                    buttons.soundOff.onclick = function() {
-                        console.log('Sound Off clicked - executing mute()');
-                        player.mute();
-                        buttons.soundOff.style.display = 'none';
-                        buttons.soundOn.style.display = 'flex';
-                    };
-                }
-
-                console.log('Player controls attached');
-            },
-            'onStateChange': function(event) {
-                console.log('Player state changed to:', event.data);
-            },
-            'onError': function(event) {
-                console.error('Player error:', event.data);
+    // Set up button click handlers directly
+    if (buttons.pause) {
+        buttons.pause.onclick = function() {
+            console.log('Pause clicked');
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                buttons.pause.style.display = 'none';
+                buttons.play.style.display = 'flex';
             }
-        }
-    });
+        };
+    }
+
+    if (buttons.play) {
+        buttons.play.onclick = function() {
+            console.log('Play clicked');
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                buttons.play.style.display = 'none';
+                buttons.pause.style.display = 'flex';
+            }
+        };
+    }
+
+    if (buttons.soundOn) {
+        buttons.soundOn.onclick = function() {
+            console.log('Sound On clicked');
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+                iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[100]}', '*');
+                buttons.soundOn.style.display = 'none';
+                buttons.soundOff.style.display = 'flex';
+            }
+        };
+    }
+
+    if (buttons.soundOff) {
+        buttons.soundOff.onclick = function() {
+            console.log('Sound Off clicked');
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+                buttons.soundOff.style.display = 'none';
+                buttons.soundOn.style.display = 'flex';
+            }
+        };
+    }
+
+    // Update iframe src to enable postMessage API
+    const currentSrc = iframe.src;
+    if (!currentSrc.includes('enablejsapi')) {
+        iframe.src = currentSrc + (currentSrc.includes('?') ? '&' : '?') + 'enablejsapi=1';
+    }
+
+    console.log('Player controls attached');
 }
 
 // Set up buttons immediately

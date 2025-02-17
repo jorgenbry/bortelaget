@@ -20,7 +20,7 @@ function initYoutubePlayers() {
         
         if (!videoId) return;
 
-        // First, set the correct source with all parameters
+        // Set up all possible parameters to hide UI elements
         const params = new URLSearchParams({
             enablejsapi: '1',
             controls: '0',
@@ -31,15 +31,38 @@ function initYoutubePlayers() {
             fs: '0',
             playsinline: '1',
             disablekb: '1',
-            origin: window.location.origin
+            origin: window.location.origin,
+            autoplay: '1',
+            mute: '1',
+            loop: '0',
+            cc_load_policy: '0',
+            color: 'white',
+            playlist: videoId,
+            widget_referrer: window.location.href,
+            autohide: '1'
         });
         
+        // Force the iframe to use our parameters
         iframe.src = `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
         
         const playerId = `bortelaget-player-${index}`;
         iframe.id = playerId;
 
         players[playerId] = new YT.Player(playerId, {
+            playerVars: {
+                'controls': 0,
+                'modestbranding': 1,
+                'showinfo': 0,
+                'rel': 0,
+                'iv_load_policy': 3,
+                'fs': 0,
+                'playsinline': 1,
+                'disablekb': 1,
+                'cc_load_policy': 0,
+                'autohide': 1,
+                'autoplay': 1,
+                'mute': 1
+            },
             events: {
                 'onReady': (event) => {
                     console.log('Player ready for ID:', playerId);

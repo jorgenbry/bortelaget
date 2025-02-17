@@ -11,19 +11,21 @@ console.log('Script loaded');
 // Initialize players for all YouTube embeds on the page
 function initYoutubePlayers() {
     console.log('Initializing players');
-    const playerIframes = document.querySelectorAll('iframe[data-video-id]');
-    console.log('Found iframes:', playerIframes.length);
+    const playerContainers = document.querySelectorAll('.bortelaget-player');
+    console.log('Found containers:', playerContainers.length);
     
-    playerIframes.forEach((iframe, index) => {
-        const videoId = iframe.getAttribute('data-video-id');
-        console.log('Processing iframe with video ID:', videoId);
+    playerContainers.forEach((container, index) => {
+        const videoId = container.getAttribute('data-video-id');
+        console.log('Processing video ID:', videoId);
         
         if (!videoId) return;
+
+        const iframe = container.querySelector('iframe');
+        if (!iframe) return;
 
         const playerId = `bortelaget-player-${index}`;
         iframe.id = playerId;
 
-        // Initialize with full player parameters
         players[playerId] = new YT.Player(playerId, {
             host: 'https://www.youtube-nocookie.com',
             playerVars: {
@@ -46,50 +48,61 @@ function initYoutubePlayers() {
             events: {
                 'onReady': (event) => {
                     console.log('Player ready for ID:', playerId);
-                    setupPlayerControls(event.target, playerId);
+                    setupPlayerControls(event.target, container);
                 }
             }
         });
     });
 }
 
-function setupPlayerControls(player, playerId) {
-    // Find the closest container with player controls
-    const container = document.getElementById(playerId).closest('.player');
-    if (!container) {
-        console.error('Could not find container for player:', playerId);
-        return;
+function setupPlayerControls(player, container) {
+    // Get all button elements
+    const playIcon = container.querySelector('.play-button');
+    const pauseIcon = container.querySelector('.pause-button');
+    const soundOnIcon = container.querySelector('.sound-on-button');
+    const soundOffIcon = container.querySelector('.sound-off-button');
+
+    // Initially hide pause icon and show play icon
+    if (playIcon && pauseIcon) {
+        // Video autoplays, so initially show pause
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+
+        // Setup play/pause toggle
+        [playIcon, pauseIcon].forEach(button => {
+            button.addEventListener('click', () => {
+                if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                    player.pauseVideo();
+                    playIcon.style.display = 'block';
+                    pauseIcon.style.display = 'none';
+                } else {
+                    player.playVideo();
+                    playIcon.style.display = 'none';
+                    pauseIcon.style.display = 'block';
+                }
+            });
+        });
     }
 
-    const playButton = container.querySelector('.play-button');
-    const pauseButton = container.querySelector('.pause-button');
+    // Initially show sound-off icon (video starts muted)
+    if (soundOnIcon && soundOffIcon) {
+        soundOnIcon.style.display = 'none';
+        soundOffIcon.style.display = 'block';
 
-    if (playButton) {
-        playButton.addEventListener('click', () => {
-            console.log('Play clicked for:', playerId);
-            try {
-                player.playVideo();
-                console.log('Play command sent');
-            } catch (e) {
-                console.error('Error playing video:', e);
-            }
+        // Setup sound toggle
+        [soundOnIcon, soundOffIcon].forEach(button => {
+            button.addEventListener('click', () => {
+                if (player.isMuted()) {
+                    player.unMute();
+                    soundOnIcon.style.display = 'block';
+                    soundOffIcon.style.display = 'none';
+                } else {
+                    player.mute();
+                    soundOnIcon.style.display = 'none';
+                    soundOffIcon.style.display = 'block';
+                }
+            });
         });
-    } else {
-        console.error('Play button not found for:', playerId);
-    }
-
-    if (pauseButton) {
-        pauseButton.addEventListener('click', () => {
-            console.log('Pause clicked for:', playerId);
-            try {
-                player.pauseVideo();
-                console.log('Pause command sent');
-            } catch (e) {
-                console.error('Error pausing video:', e);
-            }
-        });
-    } else {
-        console.error('Pause button not found for:', playerId);
     }
 }
 

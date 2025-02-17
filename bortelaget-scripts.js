@@ -15,21 +15,15 @@ function initYoutubePlayers() {
         const videoId = iframe.getAttribute('data-video-id');
         if (!videoId) return;
 
+        // Set the proper YouTube embed URL
+        iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&fs=0`;
+
         // Create a unique ID for each player
         const playerId = `bortelaget-player-${index}`;
         iframe.id = playerId;
 
         // Initialize player using the existing iframe
         players[playerId] = new YT.Player(playerId, {
-            videoId: videoId,
-            playerVars: {
-                'controls': 0,
-                'modestbranding': 1,
-                'showinfo': 0,
-                'rel': 0,
-                'iv_load_policy': 3,
-                'fs': 0
-            },
             events: {
                 'onReady': onPlayerReady
             }

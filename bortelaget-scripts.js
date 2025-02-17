@@ -10,7 +10,7 @@ console.log('Script loaded');
 // Initialize players for all YouTube embeds on the page
 function initYoutubePlayers() {
     console.log('Initializing players');
-    const playerContainers = document.querySelectorAll('.bortelaget-player');
+    const playerContainers = document.querySelectorAll('[data-video-id]');
     console.log('Found containers:', playerContainers.length);
     
     playerContainers.forEach((container, index) => {
@@ -27,6 +27,7 @@ function initYoutubePlayers() {
 
         const playerId = `bortelaget-player-${index}`;
         iframe.id = playerId;
+        console.log('Created player ID:', playerId);
 
         players[playerId] = new YT.Player(playerId, {
             host: 'https://www.youtube-nocookie.com',
@@ -64,13 +65,22 @@ function initYoutubePlayers() {
 }
 
 function setupPlayerControls(player, container) {
-    console.log('Setting up controls for container:', container);
+    console.log('Setting up controls for container');
     
-    // Get all button elements
-    const playIcon = container.querySelector('.play-button');
-    const pauseIcon = container.querySelector('.pause-button');
-    const soundOnIcon = container.querySelector('.sound-on-button');
-    const soundOffIcon = container.querySelector('.sound-off-button');
+    // Find the control buttons container
+    const controlsContainer = container.closest('.player').querySelector('.player-control-buttons');
+    console.log('Found controls container:', !!controlsContainer);
+
+    if (!controlsContainer) {
+        console.error('Controls container not found');
+        return;
+    }
+
+    // Get all button elements with more specific selectors
+    const playIcon = controlsContainer.querySelector('.player-button.play-button');
+    const pauseIcon = controlsContainer.querySelector('.player-button.pause-button');
+    const soundOnIcon = controlsContainer.querySelector('.player-button.sound-on-button');
+    const soundOffIcon = controlsContainer.querySelector('.player-button.sound-off-button');
 
     console.log('Found buttons:', {
         playIcon: !!playIcon,
@@ -79,14 +89,10 @@ function setupPlayerControls(player, container) {
         soundOffIcon: !!soundOffIcon
     });
 
-    // Initially hide pause icon and show play icon
+    // Setup play/pause toggle
     if (playIcon && pauseIcon) {
         console.log('Setting up play/pause buttons');
-        // Video autoplays, so initially show pause
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'block';
-
-        // Setup play/pause toggle
+        
         playIcon.addEventListener('click', () => {
             console.log('Play clicked');
             player.playVideo();
@@ -100,16 +106,16 @@ function setupPlayerControls(player, container) {
             playIcon.style.display = 'block';
             pauseIcon.style.display = 'none';
         });
-    } else {
-        console.error('Play/Pause buttons not found');
+
+        // Initial state
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
     }
 
-    // Initially show sound-off icon (video starts muted)
+    // Setup sound toggle
     if (soundOnIcon && soundOffIcon) {
         console.log('Setting up sound buttons');
-        soundOnIcon.style.display = 'none';
-        soundOffIcon.style.display = 'block';
-
+        
         soundOnIcon.addEventListener('click', () => {
             console.log('Sound On clicked');
             player.mute();
@@ -123,8 +129,10 @@ function setupPlayerControls(player, container) {
             soundOnIcon.style.display = 'block';
             soundOffIcon.style.display = 'none';
         });
-    } else {
-        console.error('Sound buttons not found');
+
+        // Initial state
+        soundOnIcon.style.display = 'none';
+        soundOffIcon.style.display = 'block';
     }
 }
 

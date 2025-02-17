@@ -5,14 +5,20 @@
 // Store all players in an object
 let players = {};
 
+// Debug loading
+console.log('Script loaded');
+
 // Initialize players for all YouTube embeds on the page
 function initYoutubePlayers() {
+    console.log('Initializing players');
     // Find all iframes with data-video-id
     const playerIframes = document.querySelectorAll('iframe[data-video-id]');
+    console.log('Found iframes:', playerIframes.length);
     
     playerIframes.forEach((iframe, index) => {
         // Get video ID from data attribute
         const videoId = iframe.getAttribute('data-video-id');
+        console.log('Video ID:', videoId);
         if (!videoId) return;
 
         // Create a unique ID for each player
@@ -29,12 +35,12 @@ function initYoutubePlayers() {
 }
 
 function onPlayerReady(event) {
-    // Player is ready
-    console.log('Player is ready');
+    console.log('Player ready:', event);
 }
 
 // When YouTube API is ready, initialize all players
 function onYouTubeIframeAPIReady() {
+    console.log('YouTube API Ready');
     initYoutubePlayers();
     
     // Add click handlers for custom controls
@@ -63,6 +69,11 @@ function onYouTubeIframeAPIReady() {
             }
         }
     });
+}
+
+// Additional debug
+if (typeof YT === 'undefined') {
+    console.log('YouTube API not loaded');
 }
 
     

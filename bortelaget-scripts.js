@@ -4,13 +4,13 @@
 
 // Store all players in an object
 let players = {};
-let isPlayerReady = false;
+let buttons = {};
 
 console.log('Script loaded');
 
-// Attach click handlers immediately
-function attachButtonHandlers() {
-    console.log('Attaching button handlers');
+// Find buttons and store them
+function findButtons() {
+    console.log('Finding buttons');
     
     const container = document.querySelector('.player');
     if (!container) {
@@ -18,7 +18,7 @@ function attachButtonHandlers() {
         return;
     }
 
-    const buttons = {
+    buttons = {
         play: container.querySelector('.button.player-button.play-button'),
         pause: container.querySelector('.button.player-button.pause-button'),
         soundOn: container.querySelector('.button.player-button.sound-on-button'),
@@ -32,66 +32,6 @@ function attachButtonHandlers() {
     buttons.pause.style.display = 'flex';
     buttons.soundOn.style.display = 'flex';
     buttons.soundOff.style.display = 'none';
-
-    // Add click handlers
-    buttons.pause.addEventListener('click', function(e) {
-        console.log('Pause clicked');
-        e.stopPropagation();
-        if (players.player) {
-            console.log('Attempting to pause video');
-            players.player.pauseVideo();
-            console.log('Current player state:', players.player.getPlayerState());
-            buttons.pause.style.display = 'none';
-            buttons.play.style.display = 'flex';
-        } else {
-            console.log('Player not found');
-        }
-    });
-
-    buttons.play.addEventListener('click', function(e) {
-        console.log('Play clicked');
-        e.stopPropagation();
-        if (players.player) {
-            console.log('Attempting to play video');
-            players.player.playVideo();
-            console.log('Current player state:', players.player.getPlayerState());
-            buttons.play.style.display = 'none';
-            buttons.pause.style.display = 'flex';
-        } else {
-            console.log('Player not found');
-        }
-    });
-
-    buttons.soundOn.addEventListener('click', function(e) {
-        console.log('Sound On clicked');
-        e.stopPropagation();
-        if (players.player) {
-            console.log('Attempting to unmute');
-            players.player.unMute();
-            players.player.setVolume(100);
-            console.log('Is muted:', players.player.isMuted());
-            buttons.soundOn.style.display = 'none';
-            buttons.soundOff.style.display = 'flex';
-        } else {
-            console.log('Player not found');
-        }
-    });
-
-    buttons.soundOff.addEventListener('click', function(e) {
-        console.log('Sound Off clicked');
-        e.stopPropagation();
-        if (players.player) {
-            console.log('Attempting to mute');
-            players.player.mute();
-            console.log('Is muted:', players.player.isMuted());
-            buttons.soundOff.style.display = 'none';
-            buttons.soundOn.style.display = 'flex';
-        } else {
-            console.log('Player not found');
-        }
-    });
-
-    console.log('Button handlers attached');
 }
 
 // Initialize YouTube player
@@ -117,18 +57,48 @@ function initYoutubePlayer() {
         events: {
             'onReady': (event) => {
                 console.log('Player ready');
-                isPlayerReady = true;
-                // Store the player instance
                 players.player = event.target;
-                console.log('Player methods available:', 
-                    'playVideo:', !!players.player.playVideo,
-                    'pauseVideo:', !!players.player.pauseVideo,
-                    'mute:', !!players.player.mute,
-                    'unMute:', !!players.player.unMute
-                );
+                
+                // Now that player is ready, set up button handlers
+                buttons.pause.onclick = function() {
+                    console.log('Pause clicked');
+                    players.player.pauseVideo();
+                    buttons.pause.style.display = 'none';
+                    buttons.play.style.display = 'flex';
+                };
+
+                buttons.play.onclick = function() {
+                    console.log('Play clicked');
+                    players.player.playVideo();
+                    buttons.play.style.display = 'none';
+                    buttons.pause.style.display = 'flex';
+                };
+
+                buttons.soundOn.onclick = function() {
+                    console.log('Sound On clicked');
+                    players.player.unMute();
+                    players.player.setVolume(100);
+                    buttons.soundOn.style.display = 'none';
+                    buttons.soundOff.style.display = 'flex';
+                };
+
+                buttons.soundOff.onclick = function() {
+                    console.log('Sound Off clicked');
+                    players.player.mute();
+                    buttons.soundOff.style.display = 'none';
+                    buttons.soundOn.style.display = 'flex';
+                };
+
+                console.log('Button handlers attached to ready player');
             },
             'onStateChange': (event) => {
                 console.log('Player state changed:', event.data);
+                // -1 (unstarted)
+                // 0 (ended)
+                // 1 (playing)
+                // 2 (paused)
+                // 3 (buffering)
+                // 5 (video cued)
             },
             'onError': (event) => {
                 console.error('Player error:', event.data);
@@ -137,8 +107,8 @@ function initYoutubePlayer() {
     });
 }
 
-// Attach handlers immediately
-attachButtonHandlers();
+// Find buttons immediately
+findButtons();
 
 // When YouTube API is ready, initialize player
 function onYouTubeIframeAPIReady() {

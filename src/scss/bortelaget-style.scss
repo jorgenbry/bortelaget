@@ -19,14 +19,17 @@ button {
   height: 0;
   overflow: hidden;
   background: #000; /* Add background color to see container */
-}
 
-// YouTube player container
-  .ytp-chrome-top,           /* Hides the top bar with title */
-  .ytp-chrome-bottom,        /* Hides the bottom control bar */
-  .ytp-watermark,           /* Hides YouTube logo */
-  .ytp-share-button,        /* Hides share button */
-  .ytp-watch-later-button   /* Hides watch later button */
-  {
-      display: none !important;
+  // Hide YouTube UI elements
+  .ytp-chrome-top,           // Video title bar
+  .ytp-chrome-bottom,        // Control bar
+  .ytp-gradient-top,         // Top gradient
+  .ytp-gradient-bottom,      // Bottom gradient
+  .ytp-watermark,           // YouTube logo
+  .ytp-large-play-button,   // Big play button
+  .ytp-youtube-button,      // YouTube button
+  .ytp-watch-later-button,  // Watch later button
+  .ytp-share-button {       // Share button
+    display: none !important;
   }
+}

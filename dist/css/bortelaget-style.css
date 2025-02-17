@@ -18,12 +18,15 @@ button {
   overflow: hidden;
   background: #000; /* Add background color to see container */
 }
-
-.ytp-chrome-top,
-.ytp-chrome-bottom,
-.ytp-watermark,
-.ytp-share-button,
-.ytp-watch-later-button {
+.bortelaget-player .ytp-chrome-top,
+.bortelaget-player .ytp-chrome-bottom,
+.bortelaget-player .ytp-gradient-top,
+.bortelaget-player .ytp-gradient-bottom,
+.bortelaget-player .ytp-watermark,
+.bortelaget-player .ytp-large-play-button,
+.bortelaget-player .ytp-youtube-button,
+.bortelaget-player .ytp-watch-later-button,
+.bortelaget-player .ytp-share-button {
   display: none !important;
 }
 

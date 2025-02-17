@@ -36,12 +36,19 @@ function initYoutubePlayers() {
         players[playerId] = new YT.Player(playerId, {
             videoId: videoId,
             playerVars: {
-                'controls': 0,
-                'modestbranding': 1,
-                'showinfo': 0,
-                'rel': 0,
-                'iv_load_policy': 3,
-                'fs': 0
+                'controls': 0,            // Hide all controls
+                'modestbranding': 1,      // Hide most YouTube branding
+                'showinfo': 0,            // Hide video title and uploader
+                'rel': 0,                 // Hide related videos
+                'iv_load_policy': 3,      // Hide video annotations
+                'fs': 0,                  // Hide fullscreen button
+                'disablekb': 1,           // Disable keyboard controls
+                'playsinline': 1,         // Play inline on mobile
+                'origin': window.location.origin,
+                'enablejsapi': 1,
+                'widget_referrer': window.location.href,
+                'cc_load_policy': 0,      // Hide closed captions
+                'autohide': 1             // Hide video controls when playing
             },
             events: {
                 'onReady': (event) => {

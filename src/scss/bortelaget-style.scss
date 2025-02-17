@@ -50,7 +50,7 @@ body {
 }
 
 // Hide ALL YouTube UI elements
-iframe[data-video-id] {
+iframe {
   .ytp-chrome-top,
   .ytp-chrome-bottom,
   .ytp-gradient-top,

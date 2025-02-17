@@ -1,8 +1,4 @@
-body {
-
-}
-
-// Global text styling
+/ Global text styling
 p, 
 span, 
 div, 
@@ -13,6 +9,25 @@ input,
 textarea, 
 button {
   font-family: 'STK Bureau Sans', sans-serif;
+}
+
+// YouTube player container
+.bortelaget-player,
+[data-video-id] {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
 }
 
 // Youtube Player
@@ -37,23 +52,5 @@ button {
   .ytp-watch-later-button   /* Hides watch later button */
   {
       display: none !important;
-  }
-}
-
-// YouTube player container
-[data-video-id] {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-  height: 0;
-  overflow: hidden;
-
-  iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
   }
 }

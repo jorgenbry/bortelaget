@@ -1,51 +1,17 @@
-p,
-span,
-div,
-li,
-a,
-label,
-input,
-textarea,
-button {
-  font-family: "STK Bureau Sans", sans-serif;
-}
+/* Error: expected selector.
+ *   ,
+ * 1 | / Global text styling
+ *   | ^
+ *   '
+ *   src/scss/bortelaget-style.scss 1:1  root stylesheet */
 
-.player {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* This maintains 16:9 aspect ratio */
-  height: 0;
-  overflow: hidden;
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: expected selector.\a   \2577 \a 1 \2502  / Global text styling\a   \2502  ^\a   \2575 \a   src/scss/bortelaget-style.scss 1:1  root stylesheet";
 }
-.player iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-.player .ytp-chrome-top,
-.player .ytp-chrome-bottom,
-.player .ytp-watermark,
-.player .ytp-share-button,
-.player .ytp-watch-later-button {
-  display: none !important;
-}
-
-[data-video-id] {
-  position: relative;
-  width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-  height: 0;
-  overflow: hidden;
-}
-[data-video-id] iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-/*# sourceMappingURL=bortelaget-style.css.map */

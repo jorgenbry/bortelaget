@@ -59,7 +59,9 @@ iframe[data-video-id] .ytp-show-cards-title,
 iframe[data-video-id] .ytp-cards-button,
 iframe[data-video-id] .ytp-pause-overlay,
 iframe[data-video-id] .ytp-menuitem,
-iframe[data-video-id] .ytp-ce-element {
+iframe[data-video-id] .ytp-ce-element,
+iframe[data-video-id] .ytp-watermark.yt-uix-sessionlink,
+iframe[data-video-id] .ytp-chrome-top.ytp-show-cards-title {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;

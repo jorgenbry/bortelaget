@@ -65,7 +65,9 @@ iframe[data-video-id] {
   .ytp-cards-button,
   .ytp-pause-overlay,
   .ytp-menuitem,
-  .ytp-ce-element {
+  .ytp-ce-element,
+  .ytp-watermark.yt-uix-sessionlink,
+  .ytp-chrome-top.ytp-show-cards-title {
     display: none !important;
     opacity: 0 !important;
     visibility: hidden !important;

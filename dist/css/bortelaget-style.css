@@ -10,4 +10,12 @@ button {
   font-family: "STK Bureau Sans", sans-serif;
 }
 
+.player .ytp-chrome-top,
+.player .ytp-chrome-bottom,
+.player .ytp-watermark,
+.player .ytp-share-button,
+.player .ytp-watch-later-button {
+  display: none !important;
+}
+
 /*# sourceMappingURL=bortelaget-style.css.map */

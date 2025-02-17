@@ -14,3 +14,16 @@ textarea,
 button {
   font-family: 'STK Bureau Sans', sans-serif;
 }
+
+// Youtube Player
+
+.player {
+  .ytp-chrome-top,           /* Hides the top bar with title */
+  .ytp-chrome-bottom,        /* Hides the bottom control bar */
+  .ytp-watermark,           /* Hides YouTube logo */
+  .ytp-share-button,        /* Hides share button */
+  .ytp-watch-later-button   /* Hides watch later button */
+  {
+      display: none !important;
+  }
+}

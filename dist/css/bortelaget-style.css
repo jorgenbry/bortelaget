@@ -1,8 +1,13 @@
-body {
-  background-color: red;
-}
-body .logo {
-  width: 100px;
+p,
+span,
+div,
+li,
+a,
+label,
+input,
+textarea,
+button {
+  font-family: "STK Bureau Sans", sans-serif;
 }
 
 /*# sourceMappingURL=bortelaget-style.css.map */

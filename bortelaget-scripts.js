@@ -53,57 +53,72 @@ function initYoutubePlayer() {
         return;
     }
 
-    // Set up button click handlers directly
+    // Update iframe src to enable API
+    let srcUrl = new URL(iframe.src);
+    srcUrl.searchParams.set('enablejsapi', '1');
+    srcUrl.searchParams.set('origin', window.location.origin);
+    iframe.src = srcUrl.toString();
+
+    // Set up button click handlers
     if (buttons.pause) {
         buttons.pause.onclick = function() {
             console.log('Pause clicked');
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-                buttons.pause.style.display = 'none';
-                buttons.play.style.display = 'flex';
-            }
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'pauseVideo'
+            }), '*');
+            buttons.pause.style.display = 'none';
+            buttons.play.style.display = 'flex';
         };
     }
 
     if (buttons.play) {
         buttons.play.onclick = function() {
             console.log('Play clicked');
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-                buttons.play.style.display = 'none';
-                buttons.pause.style.display = 'flex';
-            }
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'playVideo'
+            }), '*');
+            buttons.play.style.display = 'none';
+            buttons.pause.style.display = 'flex';
         };
     }
 
     if (buttons.soundOn) {
         buttons.soundOn.onclick = function() {
             console.log('Sound On clicked');
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-                iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[100]}', '*');
-                buttons.soundOn.style.display = 'none';
-                buttons.soundOff.style.display = 'flex';
-            }
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'unMute'
+            }), '*');
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'setVolume',
+                args: [100]
+            }), '*');
+            buttons.soundOn.style.display = 'none';
+            buttons.soundOff.style.display = 'flex';
         };
     }
 
     if (buttons.soundOff) {
         buttons.soundOff.onclick = function() {
             console.log('Sound Off clicked');
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
-                buttons.soundOff.style.display = 'none';
-                buttons.soundOn.style.display = 'flex';
-            }
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'mute'
+            }), '*');
+            buttons.soundOff.style.display = 'none';
+            buttons.soundOn.style.display = 'flex';
         };
     }
 
-    // Update iframe src to enable postMessage API
-    const currentSrc = iframe.src;
-    if (!currentSrc.includes('enablejsapi')) {
-        iframe.src = currentSrc + (currentSrc.includes('?') ? '&' : '?') + 'enablejsapi=1';
-    }
+    // Listen for messages from the iframe
+    window.addEventListener('message', function(event) {
+        if (event.source === iframe.contentWindow) {
+            console.log('Received message from player:', event.data);
+        }
+    });
 
     console.log('Player controls attached');
 }

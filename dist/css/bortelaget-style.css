@@ -15,6 +15,14 @@ button {
   opacity: 0.75;
 }
 
+html {
+  background-color: var(--color-primitives--trykksverte);
+}
+
+body {
+  background-color: var(--color-primitives--hvit);
+}
+
 .player {
   position: relative;
   width: 100%;

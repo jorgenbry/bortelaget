@@ -16,6 +16,14 @@ button {
   opacity: .75;
 }
 
+html {
+  background-color: var(--color-primitives--trykksverte);
+}
+
+body {
+  background-color: var(--color-primitives--hvit);
+}
+
 // YouTube player container
 .player {
   position: relative;

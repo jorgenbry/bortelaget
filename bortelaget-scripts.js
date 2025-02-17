@@ -2,6 +2,9 @@
     $('.w-nav-button').trigger('click');
     });
 
+// Store all players in an object
+let players = {};
+
 // Initialize players for all YouTube embeds on the page
 function initYoutubePlayers() {
     // Find all iframes with data-video-id
@@ -17,7 +20,7 @@ function initYoutubePlayers() {
         iframe.id = playerId;
 
         // Initialize player using the existing iframe
-        new YT.Player(playerId, {
+        players[playerId] = new YT.Player(playerId, {
             videoId: videoId,
             playerVars: {
                 'controls': 0,
@@ -42,6 +45,33 @@ function onPlayerReady(event) {
 // When YouTube API is ready, initialize all players
 function onYouTubeIframeAPIReady() {
     initYoutubePlayers();
+    
+    // Add click handlers for custom controls
+    document.addEventListener('click', function(e) {
+        // Find the closest player container
+        const container = e.target.closest('[data-video-id]');
+        if (!container) return;
+        
+        const playerId = container.querySelector('iframe').id;
+        const player = players[playerId];
+        
+        // Handle different control buttons
+        if (e.target.matches('.play-button')) {
+            player.playVideo();
+        }
+        else if (e.target.matches('.pause-button')) {
+            player.pauseVideo();
+        }
+        else if (e.target.matches('.mute-button')) {
+            if (player.isMuted()) {
+                player.unMute();
+                e.target.textContent = 'Mute';
+            } else {
+                player.mute();
+                e.target.textContent = 'Unmute';
+            }
+        }
+    });
 }
 
     

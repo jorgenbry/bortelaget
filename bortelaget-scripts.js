@@ -10,7 +10,8 @@ console.log('Script loaded');
 // Initialize players for all YouTube embeds on the page
 function initYoutubePlayers() {
     console.log('Initializing players');
-    const playerContainers = document.querySelectorAll('[data-video-id]');
+    // Only select the parent container
+    const playerContainers = document.querySelectorAll('div[data-video-id]');
     console.log('Found containers:', playerContainers.length);
     
     playerContainers.forEach((container, index) => {
@@ -29,29 +30,32 @@ function initYoutubePlayers() {
         iframe.id = playerId;
         console.log('Created player ID:', playerId);
 
+        // Find control buttons before initializing player
+        const buttons = {
+            play: container.parentElement.querySelector('.play-button'),
+            pause: container.parentElement.querySelector('.pause-button'),
+            soundOn: container.parentElement.querySelector('.sound-on-button'),
+            soundOff: container.parentElement.querySelector('.sound-off-button')
+        };
+
+        console.log('Found buttons:', {
+            play: !!buttons.play,
+            pause: !!buttons.pause,
+            soundOn: !!buttons.soundOn,
+            soundOff: !!buttons.soundOff
+        });
+
+        // Set initial button states
+        if (buttons.play) buttons.play.style.display = 'none';
+        if (buttons.pause) buttons.pause.style.display = 'flex';
+        if (buttons.soundOn) buttons.soundOn.style.display = 'none';
+        if (buttons.soundOff) buttons.soundOff.style.display = 'flex';
+
         players[playerId] = new YT.Player(playerId, {
-            host: 'https://www.youtube-nocookie.com',
-            playerVars: {
-                'controls': 0,
-                'modestbranding': 1,
-                'showinfo': 0,
-                'rel': 0,
-                'iv_load_policy': 3,
-                'fs': 0,
-                'playsinline': 1,
-                'disablekb': 1,
-                'autoplay': 1,
-                'mute': 1,
-                'loop': 0,
-                'cc_load_policy': 0,
-                'origin': window.location.origin,
-                'widget_referrer': window.location.href,
-                'start': 1
-            },
             events: {
                 'onReady': (event) => {
                     console.log('Player ready for ID:', playerId);
-                    setupPlayerControls(event.target, container);
+                    setupPlayerControls(event.target, buttons);
                 },
                 'onStateChange': (event) => {
                     console.log('Player state changed:', event.data);
@@ -64,75 +68,41 @@ function initYoutubePlayers() {
     });
 }
 
-function setupPlayerControls(player, container) {
-    console.log('Setting up controls for container');
-    
-    // Find the control buttons container
-    const controlsContainer = container.closest('.player').querySelector('.player-control-buttons');
-    console.log('Found controls container:', !!controlsContainer);
-
-    if (!controlsContainer) {
-        console.error('Controls container not found');
-        return;
-    }
-
-    // Get all button elements with more specific selectors
-    const playIcon = controlsContainer.querySelector('.player-button.play-button');
-    const pauseIcon = controlsContainer.querySelector('.player-button.pause-button');
-    const soundOnIcon = controlsContainer.querySelector('.player-button.sound-on-button');
-    const soundOffIcon = controlsContainer.querySelector('.player-button.sound-off-button');
-
-    console.log('Found buttons:', {
-        playIcon: !!playIcon,
-        pauseIcon: !!pauseIcon,
-        soundOnIcon: !!soundOnIcon,
-        soundOffIcon: !!soundOffIcon
-    });
+function setupPlayerControls(player, buttons) {
+    console.log('Setting up controls with buttons:', buttons);
 
     // Setup play/pause toggle
-    if (playIcon && pauseIcon) {
-        console.log('Setting up play/pause buttons');
-        
-        playIcon.addEventListener('click', () => {
+    if (buttons.play && buttons.pause) {
+        buttons.play.addEventListener('click', () => {
             console.log('Play clicked');
             player.playVideo();
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'block';
+            buttons.play.style.display = 'none';
+            buttons.pause.style.display = 'flex';
         });
 
-        pauseIcon.addEventListener('click', () => {
+        buttons.pause.addEventListener('click', () => {
             console.log('Pause clicked');
             player.pauseVideo();
-            playIcon.style.display = 'block';
-            pauseIcon.style.display = 'none';
+            buttons.play.style.display = 'flex';
+            buttons.pause.style.display = 'none';
         });
-
-        // Initial state
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'block';
     }
 
     // Setup sound toggle
-    if (soundOnIcon && soundOffIcon) {
-        console.log('Setting up sound buttons');
-        
-        soundOnIcon.addEventListener('click', () => {
+    if (buttons.soundOn && buttons.soundOff) {
+        buttons.soundOn.addEventListener('click', () => {
             console.log('Sound On clicked');
             player.mute();
-            soundOnIcon.style.display = 'none';
-            soundOffIcon.style.display = 'block';
+            buttons.soundOn.style.display = 'none';
+            buttons.soundOff.style.display = 'flex';
         });
 
-        soundOffIcon.addEventListener('click', () => {
+        buttons.soundOff.addEventListener('click', () => {
             console.log('Sound Off clicked');
             player.unMute();
-            soundOnIcon.style.display = 'block';
-            soundOffIcon.style.display = 'none';
+            buttons.soundOn.style.display = 'flex';
+            buttons.soundOff.style.display = 'none';
         });
-
-        // Initial state
-        soundOnIcon.style.display = 'none';
-        soundOffIcon.style.display = 'block';
     }
 }
 

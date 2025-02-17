@@ -31,30 +31,38 @@ function initYoutubePlayers() {
 
         // Find control buttons
         const buttons = {
-            play: container.parentElement.querySelector('.play-button'),
-            pause: container.parentElement.querySelector('.pause-button'),
-            soundOn: container.parentElement.querySelector('.sound-on-button'),
-            soundOff: container.parentElement.querySelector('.sound-off-button')
+            play: document.querySelector('.play-button'),
+            pause: document.querySelector('.pause-button'),
+            soundOn: document.querySelector('.sound-on-button'),
+            soundOff: document.querySelector('.sound-off-button')
         };
 
-        console.log('Found buttons:', {
-            play: !!buttons.play,
-            pause: !!buttons.pause,
-            soundOn: !!buttons.soundOn,
-            soundOff: !!buttons.soundOff
-        });
+        console.log('Found buttons:', buttons);
 
-        // Set initial button states
-        if (buttons.play) buttons.play.style.display = 'none';
-        if (buttons.pause) buttons.pause.style.display = 'flex';
-        // Reversed sound icon logic since video starts muted
-        if (buttons.soundOn) buttons.soundOn.style.display = 'flex';
-        if (buttons.soundOff) buttons.soundOff.style.display = 'none';
+        // Set initial states
+        buttons.play.style.cssText = 'display: none !important';
+        buttons.pause.style.cssText = 'display: flex !important';
+        buttons.soundOn.style.cssText = 'display: flex !important';
+        buttons.soundOff.style.cssText = 'display: none !important';
 
         players[playerId] = new YT.Player(playerId, {
+            videoId: videoId,
+            playerVars: {
+                'autoplay': 1,
+                'controls': 0,
+                'modestbranding': 1,
+                'showinfo': 0,
+                'rel': 0,
+                'iv_load_policy': 3,
+                'fs': 0,
+                'playsinline': 1,
+                'disablekb': 1,
+                'mute': 1
+            },
             events: {
                 'onReady': (event) => {
                     console.log('Player ready for ID:', playerId);
+                    console.log('Player state:', event.target.getPlayerState());
                     setupPlayerControls(event.target, buttons, playerId);
                 },
                 'onStateChange': (event) => {
@@ -65,6 +73,8 @@ function initYoutubePlayers() {
                 }
             }
         });
+        
+        console.log('Player initialized:', playerId);
     });
 }
 
@@ -72,58 +82,36 @@ function setupPlayerControls(player, buttons, playerId) {
     console.log('Setting up controls for player:', playerId);
 
     // Setup play/pause toggle
-    if (buttons.play && buttons.pause) {
-        buttons.play.onclick = () => {
-            console.log('Play clicked for:', playerId);
-            try {
-                player.playVideo();
-                console.log('Play command sent');
-                buttons.play.style.display = 'none';
-                buttons.pause.style.display = 'flex';
-            } catch (e) {
-                console.error('Error playing video:', e);
-            }
-        };
+    buttons.play.addEventListener('click', function() {
+        console.log('Play clicked for:', playerId);
+        player.playVideo();
+        buttons.play.style.cssText = 'display: none !important';
+        buttons.pause.style.cssText = 'display: flex !important';
+    });
 
-        buttons.pause.onclick = () => {
-            console.log('Pause clicked for:', playerId);
-            try {
-                player.pauseVideo();
-                console.log('Pause command sent');
-                buttons.play.style.display = 'flex';
-                buttons.pause.style.display = 'none';
-            } catch (e) {
-                console.error('Error pausing video:', e);
-            }
-        };
-    }
+    buttons.pause.addEventListener('click', function() {
+        console.log('Pause clicked for:', playerId);
+        player.pauseVideo();
+        buttons.play.style.cssText = 'display: flex !important';
+        buttons.pause.style.cssText = 'display: none !important';
+    });
 
     // Setup sound toggle
-    if (buttons.soundOn && buttons.soundOff) {
-        buttons.soundOn.onclick = () => {
-            console.log('Sound On clicked for:', playerId);
-            try {
-                player.unMute();
-                console.log('Unmute command sent');
-                buttons.soundOn.style.display = 'none';
-                buttons.soundOff.style.display = 'flex';
-            } catch (e) {
-                console.error('Error unmuting video:', e);
-            }
-        };
+    buttons.soundOn.addEventListener('click', function() {
+        console.log('Sound On clicked for:', playerId);
+        player.unMute();
+        buttons.soundOn.style.cssText = 'display: none !important';
+        buttons.soundOff.style.cssText = 'display: flex !important';
+    });
 
-        buttons.soundOff.onclick = () => {
-            console.log('Sound Off clicked for:', playerId);
-            try {
-                player.mute();
-                console.log('Mute command sent');
-                buttons.soundOn.style.display = 'flex';
-                buttons.soundOff.style.display = 'none';
-            } catch (e) {
-                console.error('Error muting video:', e);
-            }
-        };
-    }
+    buttons.soundOff.addEventListener('click', function() {
+        console.log('Sound Off clicked for:', playerId);
+        player.mute();
+        buttons.soundOn.style.cssText = 'display: flex !important';
+        buttons.soundOff.style.cssText = 'display: none !important';
+    });
+
+    console.log('Control setup complete for:', playerId);
 }
 
 // When YouTube API is ready, initialize all players

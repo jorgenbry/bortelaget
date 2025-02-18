@@ -2,174 +2,143 @@
     $('.w-nav-button').trigger('click');
     });
 
-// Store all players in an object
+    // YouTube Player Code
 let players = {};
-let buttons = {};
+let buttons = null;
 
-console.log('Script loaded');
-
-// Find buttons and store them
-function findButtons() {
-    console.log('Finding buttons');
-    
-    const container = document.querySelector('.player');
-    if (!container) {
-        console.error('No player container found');
-        return;
-    }
-
+function setupButtons() {
     buttons = {
-        play: container.querySelector('.button.player-button.play-button'),
-        pause: container.querySelector('.button.player-button.pause-button'),
-        soundOn: container.querySelector('.button.player-button.sound-on-button'),
-        soundOff: container.querySelector('.button.player-button.sound-off-button')
+        play: document.querySelector('.play-button'),
+        pause: document.querySelector('.pause-button'),
+        soundOn: document.querySelector('.sound-on-button'),
+        soundOff: document.querySelector('.sound-off-button')
     };
 
-    console.log('Found buttons:', buttons);
-
-    // Set initial states
-    buttons.play.style.display = 'none';
-    buttons.pause.style.display = 'flex';
-    buttons.soundOn.style.display = 'flex';
-    buttons.soundOff.style.display = 'none';
+    // Set initial visibility
+    if (buttons.play) buttons.play.style.display = 'none';
+    if (buttons.pause) buttons.pause.style.display = 'flex';
+    if (buttons.soundOn) buttons.soundOn.style.display = 'flex';
+    if (buttons.soundOff) buttons.soundOff.style.display = 'none';
 }
 
-// Initialize YouTube player
 function initYoutubePlayer() {
-    console.log('Initializing player');
     const container = document.querySelector('div[data-video-id]');
-    if (!container) {
-        console.error('No video container found');
-        return;
-    }
+    if (!container) return;
 
-    const videoId = container.getAttribute('data-video-id');
     const iframe = container.querySelector('iframe');
-    
-    if (!iframe || !videoId) {
-        console.error('No iframe or video ID found');
-        return;
+    if (!iframe) return;
+
+    // Update iframe src to enable API
+    let srcUrl = new URL(iframe.src);
+    srcUrl.searchParams.set('enablejsapi', '1');
+    srcUrl.searchParams.set('origin', window.location.origin);
+    iframe.src = srcUrl.toString();
+
+    // Set up button click handlers
+    if (buttons.pause) {
+        buttons.pause.onclick = function() {
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'pauseVideo'
+            }), '*');
+            buttons.pause.style.display = 'none';
+            buttons.play.style.display = 'flex';
+        };
     }
 
-    iframe.id = 'bortelaget-player';
-    
-    players.player = new YT.Player('bortelaget-player', {
-        events: {
-            'onReady': (event) => {
-                console.log('Player ready');
-                players.player = event.target;
-                
-                // Now that player is ready, set up button handlers
-                buttons.pause.onclick = function() {
-                    console.log('Pause clicked');
-                    players.player.pauseVideo();
-                    buttons.pause.style.display = 'none';
-                    buttons.play.style.display = 'flex';
-                };
+    if (buttons.play) {
+        buttons.play.onclick = function() {
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'playVideo'
+            }), '*');
+            buttons.play.style.display = 'none';
+            buttons.pause.style.display = 'flex';
+        };
+    }
 
-                buttons.play.onclick = function() {
-                    console.log('Play clicked');
-                    players.player.playVideo();
-                    buttons.play.style.display = 'none';
-                    buttons.pause.style.display = 'flex';
-                };
+    if (buttons.soundOn) {
+        buttons.soundOn.onclick = function() {
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'unMute'
+            }), '*');
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'setVolume',
+                args: [100]
+            }), '*');
+            buttons.soundOn.style.display = 'none';
+            buttons.soundOff.style.display = 'flex';
+        };
+    }
 
-                buttons.soundOn.onclick = function() {
-                    console.log('Sound On clicked');
-                    players.player.unMute();
-                    players.player.setVolume(100);
-                    buttons.soundOn.style.display = 'none';
-                    buttons.soundOff.style.display = 'flex';
-                };
-
-                buttons.soundOff.onclick = function() {
-                    console.log('Sound Off clicked');
-                    players.player.mute();
-                    buttons.soundOff.style.display = 'none';
-                    buttons.soundOn.style.display = 'flex';
-                };
-
-                console.log('Button handlers attached to ready player');
-            },
-            'onStateChange': (event) => {
-                console.log('Player state changed:', event.data);
-                // -1 (unstarted)
-                // 0 (ended)
-                // 1 (playing)
-                // 2 (paused)
-                // 3 (buffering)
-                // 5 (video cued)
-            },
-            'onError': (event) => {
-                console.error('Player error:', event.data);
-            }
-        }
-    });
+    if (buttons.soundOff) {
+        buttons.soundOff.onclick = function() {
+            iframe.contentWindow.postMessage(JSON.stringify({
+                event: 'command',
+                func: 'mute'
+            }), '*');
+            buttons.soundOff.style.display = 'none';
+            buttons.soundOn.style.display = 'flex';
+        };
+    }
 }
 
-// Find buttons immediately
-findButtons();
+// Set up buttons immediately
+setupButtons();
 
-// When YouTube API is ready, initialize player
+// Initialize player when API is ready
 function onYouTubeIframeAPIReady() {
-    console.log('YouTube API Ready');
     initYoutubePlayer();
 }
 
-// Add a global click handler to verify event bubbling
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.player-button')) {
-        console.log('Button clicked (global handler)');
+// Weather Code (in an IIFE to avoid global scope pollution)
+(function() {
+    async function fetchWeather() {
+        try {
+            const response = await fetch('https://api.met.no/weatherapi/nowcast/2.0/complete?lat=62.0758&lon=9.1280', {
+                headers: {
+                    'User-Agent': 'Bortelaget/1.0 (https://bortelaget.no)'
+                }
+            });
+            
+            const data = await response.json();
+            const currentWeather = data.properties.timeseries[0].data;
+            
+            const weather = {
+                temperature: currentWeather.instant.details.air_temperature.toFixed(1),
+                precipitation: currentWeather.instant.details.precipitation_rate,
+                windDirection: currentWeather.instant.details.wind_from_direction,
+                windSpeed: currentWeather.instant.details.wind_speed.toFixed(1),
+                symbol: currentWeather.next_1_hours.summary.symbol_code
+            };
+
+            updateWeatherDisplay(weather);
+        } catch (error) {
+            console.error('Error fetching weather:', error);
+        }
     }
-});
 
-// Additional debug
-if (typeof YT === 'undefined') {
-    console.log('YouTube API not loaded');
-}
-
-
-// Weather widget
-
-async function fetchWeather() {
-    try {
-        const response = await fetch('https://api.met.no/weatherapi/nowcast/2.0/complete?lat=62.0758&lon=9.1280', {
-            headers: {
-                'User-Agent': 'Bortelaget/1.0 (https://bortelaget.no)'
-            }
-        });
-        
-        const data = await response.json();
-        const currentWeather = data.properties.timeseries[0].data;
-        
-        // Extract the specific properties we want
-        const weather = {
-            temperature: Math.round(currentWeather.instant.details.air_temperature),
-            precipitation: currentWeather.instant.details.precipitation_rate,
-            windDirection: currentWeather.instant.details.wind_from_direction,
-            windSpeed: Math.round(currentWeather.instant.details.wind_speed),
-            symbol: currentWeather.next_1_hours.summary.symbol_code
+    function updateWeatherDisplay(weather) {
+        const elements = {
+            temp: document.querySelector('.weather-temp'),
+            precip: document.querySelector('.weather-precip'),
+            windSpeed: document.querySelector('.weather-wind-speed'),
+            windDir: document.querySelector('.weather-wind-dir'),
+            symbol: document.querySelector('.weather-symbol')
         };
 
-        console.log('Weather data:', weather);
-        updateWeatherDisplay(weather);
-        
-    } catch (error) {
-        console.error('Error fetching weather:', error);
+        if (elements.temp) elements.temp.textContent = `${weather.temperature}°`;
+        if (elements.precip) elements.precip.textContent = `${weather.precipitation} mm/h`;
+        if (elements.windSpeed) elements.windSpeed.textContent = `${weather.windSpeed} m/s`;
+        if (elements.windDir) elements.windDir.style.transform = `rotate(${weather.windDirection + 180}deg)`;
+        if (elements.symbol) elements.symbol.src = `path/to/weather-icons/${weather.symbol}.svg`;
     }
-}
 
-function updateWeatherDisplay(weather) {
-    // Update DOM elements - adjust selectors to match your HTML
-    document.querySelector('.weather-temp').textContent = `${weather.temperature}°C`;
-    document.querySelector('.weather-precip').textContent = `${weather.precipitation} mm/h`;
-    document.querySelector('.weather-wind-speed').textContent = `${weather.windSpeed} m/s`;
-    document.querySelector('.weather-wind-dir').style.transform = `rotate(${weather.windDirection}deg)`;
-    document.querySelector('.weather-symbol').src = `path/to/weather-icons/${weather.symbol}.svg`;
-}
+    // Fetch weather immediately
+    fetchWeather();
 
-// Fetch weather immediately
-fetchWeather();
-
-// Update every 5 minutes
-setInterval(fetchWeather, 5 * 60 * 1000);
+    // Update every 5 minutes
+    setInterval(fetchWeather, 5 * 60 * 1000);
+})();

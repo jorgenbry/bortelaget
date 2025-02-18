@@ -1,5 +1,4 @@
-// Store all players in an object
-let players = {};
+// Store buttons globally
 let buttons = null;
 
 // Find and set up buttons
@@ -89,4 +88,4 @@ setupButtons();
 // Initialize player when API is ready
 function onYouTubeIframeAPIReady() {
     initYoutubePlayer();
-} 
+}

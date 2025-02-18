@@ -24,6 +24,15 @@ body {
   background-color: var(--color-primitives--hvit);
 }
 
+.w-richtext {
+  h1, h2, h3, h4, h5, h6 {
+      &:first-child {
+          margin-top: 0;
+      }
+  }
+}
+
+
 // YouTube player container
 .player {
   position: relative;
@@ -74,6 +83,7 @@ iframe {
   }
 }
 
+
 // Additional overlay to prevent hover interactions
 .player::after {
   content: '';
@@ -85,3 +95,4 @@ iframe {
   z-index: 1;
   pointer-events: none;
 }
+

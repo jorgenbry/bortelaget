@@ -23,6 +23,10 @@ body {
   background-color: var(--color-primitives--hvit);
 }
 
+.w-richtext h1:first-child, .w-richtext h2:first-child, .w-richtext h3:first-child, .w-richtext h4:first-child, .w-richtext h5:first-child, .w-richtext h6:first-child {
+  margin-top: 0;
+}
+
 .player {
   position: relative;
   width: 100%;

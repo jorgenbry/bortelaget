@@ -2,10 +2,10 @@
     $('.w-nav-button').trigger('click');
     });
 
-// Store all players in an object
-let players = {};
+// Store buttons globally
 let buttons = null;
 
+// Find and set up buttons
 function setupButtons() {
     buttons = {
         play: document.querySelector('.play-button'),
@@ -16,11 +16,12 @@ function setupButtons() {
 
     // Set initial visibility
     if (buttons.play) buttons.play.style.display = 'none';
-    if (buttons.pause) buttons.play.style.display = 'flex';
+    if (buttons.pause) buttons.pause.style.display = 'flex';
     if (buttons.soundOn) buttons.soundOn.style.display = 'flex';
     if (buttons.soundOff) buttons.soundOff.style.display = 'none';
 }
 
+// Initialize YouTube player
 function initYoutubePlayer() {
     const container = document.querySelector('div[data-video-id]');
     if (!container) return;

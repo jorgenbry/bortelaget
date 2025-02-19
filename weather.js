@@ -199,10 +199,13 @@ function setupDropdown() {
     // Toggle dropdown icon rotation and Webflow's dropdown class
     if (dropdownToggle) {
         dropdownToggle.addEventListener('click', () => {
-            isOpen = !isOpen;
-            if (dropdownIcon) {
-                dropdownIcon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
-            }
+            // Check if dropdown is actually open after Webflow's handling
+            setTimeout(() => {
+                isOpen = dropdownList.classList.contains('w--open');
+                if (dropdownIcon) {
+                    dropdownIcon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
+            }, 0);
         });
     }
 

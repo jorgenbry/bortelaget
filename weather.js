@@ -11,10 +11,10 @@ async function fetchWeather() {
         const currentWeather = data.properties.timeseries[0].data;
         
         const weather = {
-            temperature: currentWeather.instant.details.air_temperature.toFixed(1),
-            precipitation: currentWeather.instant.details.precipitation_rate,
+            temperature: currentWeather.instant.details.air_temperature.toFixed(1).replace('.', ','),
+            precipitation: currentWeather.instant.details.precipitation_rate.toString().replace('.', ','),
             windDirection: currentWeather.instant.details.wind_from_direction,
-            windSpeed: currentWeather.instant.details.wind_speed.toFixed(1),
+            windSpeed: currentWeather.instant.details.wind_speed.toFixed(1).replace('.', ','),
             symbol: currentWeather.next_1_hours.summary.symbol_code
         };
 

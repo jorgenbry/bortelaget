@@ -60,7 +60,7 @@ function updateWeatherDisplay(weather) {
 // Set up dropdown functionality
 function setupDropdown() {
     const dropdown = document.querySelector('.weather-dropdown');
-    const dropdownList = document.querySelector('.dropdown-list');
+    const dropdownList = document.querySelector('nav.dropdown-list.w-dropdown-list');
     const dropdownToggle = document.querySelector('.dropdown-toggle');
     const dropdownIcon = document.querySelector('.dropdown-icon');
     const placeLabel = document.querySelector('.widget-place');

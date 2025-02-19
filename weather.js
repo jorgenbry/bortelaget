@@ -126,7 +126,7 @@ async function fetchWeather(location = currentLocation) {
     } catch (error) {
         console.error('Error fetching weather:', error);
     }
-}
+} 
 
 function updateWeatherDisplay(weather) {
     const elements = {

@@ -213,9 +213,17 @@ function setupDropdown() {
     }
 
     function closeDropdown() {
-        // Use Webflow's built-in close functionality
-        if (dropdownToggle && dropdownList.classList.contains('w--open')) {
-            dropdownToggle.click();
+        // Remove Webflow's open classes
+        if (dropdown) dropdown.classList.remove('w--open');
+        if (dropdownList) dropdownList.classList.remove('w--open');
+        if (dropdownToggle) dropdownToggle.classList.remove('w--open');
+        
+        // Reset the icon rotation
+        if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
+        
+        // Reset Webflow's internal state
+        if (dropdownToggle) {
+            dropdownToggle.setAttribute('aria-expanded', 'false');
         }
     }
 

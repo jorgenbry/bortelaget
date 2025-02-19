@@ -137,9 +137,6 @@ function updateWeatherDisplay(weather) {
         symbol: document.querySelector('.weather-symbol')
     };
 
-    console.log('Weather data received:', weather);
-    console.log('Found symbol element:', elements.symbol);
-
     if (elements.temp) elements.temp.textContent = `${weather.temperature}°`;
     if (elements.precip) elements.precip.textContent = `${weather.precipitation} mm/h`;
     if (elements.windSpeed) elements.windSpeed.textContent = `${weather.windSpeed} m/s`;
@@ -147,40 +144,37 @@ function updateWeatherDisplay(weather) {
     
     if (elements.symbol) {
         const symbolCode = weatherSymbolKeys[weather.symbol] || '01d';
-        console.log('Fetching symbol:', symbolCode);
+        console.log('Weather symbol code:', weather.symbol);
+        console.log('Mapped symbol code:', symbolCode);
         
         fetch(`https://nrkno.github.io/yr-weather-symbols/symbols/outline/${symbolCode}.svg`)
             .then(response => {
-                console.log('SVG response:', response.status);
+                console.log('SVG fetch response:', response.status);
                 return response.text();
             })
             .then(svgContent => {
                 console.log('SVG content received, length:', svgContent.length);
                 
-                // Create a wrapper div to safely parse the SVG
                 const wrapper = document.createElement('div');
                 wrapper.innerHTML = svgContent;
                 
-                // Get the SVG element
                 const svg = wrapper.querySelector('svg');
                 if (svg) {
-                    // Add any desired classes or attributes
                     svg.classList.add('weather-symbol-svg');
                     svg.setAttribute('width', '40');
                     svg.setAttribute('height', '40');
                     svg.setAttribute('aria-label', weather.symbol.replace(/_/g, ' '));
                     
-                    // Replace the current content with the new SVG
                     elements.symbol.innerHTML = '';
                     elements.symbol.appendChild(svg);
                     console.log('SVG inserted into DOM');
                 } else {
-                    console.log('No SVG element found in response');
+                    console.error('No SVG element found in response');
                 }
             })
             .catch(error => console.error('Error loading weather icon:', error));
     } else {
-        console.log('Weather symbol element not found in DOM');
+        console.error('Weather symbol element not found in DOM');
     }
 }
 

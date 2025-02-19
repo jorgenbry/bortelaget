@@ -60,6 +60,7 @@ function updateWeatherDisplay(weather) {
 // Set up dropdown functionality
 function setupDropdown() {
     const dropdown = document.querySelector('.weather-dropdown');
+    const dropdownList = document.querySelector('.weather-dropdown-list');
     const dropdownToggle = document.querySelector('.dropdown-toggle');
     const dropdownIcon = document.querySelector('.dropdown-icon');
     const placeLabel = document.querySelector('.widget-place');
@@ -88,6 +89,7 @@ function setupDropdown() {
             
             // Close dropdown
             if (dropdown) dropdown.classList.remove('w--open');
+            if (dropdownList) dropdownList.classList.remove('w--open');
             if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
             isOpen = false;
         });
@@ -102,6 +104,7 @@ function setupDropdown() {
             
             // Close dropdown
             if (dropdown) dropdown.classList.remove('w--open');
+            if (dropdownList) dropdownList.classList.remove('w--open');
             if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
             isOpen = false;
         });

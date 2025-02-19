@@ -193,40 +193,30 @@ function setupDropdown() {
     const placeLabel = document.querySelector('.widget-place');
     const dombasLink = document.querySelector('.dombas');
     const lillehammerLink = document.querySelector('.lillehammer');
-    
-    let isOpen = false;
 
-    // Toggle dropdown icon rotation and Webflow's dropdown class
-    if (dropdownToggle) {
-        dropdownToggle.addEventListener('click', () => {
-            // Check if dropdown is actually open after Webflow's handling
-            setTimeout(() => {
-                isOpen = dropdownList.classList.contains('w--open');
-                if (dropdownIcon) {
-                    dropdownIcon.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
-                }
-            }, 0);
+    // Watch for Webflow's dropdown state changes
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.target.classList.contains('w--open')) {
+                dropdownIcon.style.transform = 'rotate(180deg)';
+            } else {
+                dropdownIcon.style.transform = 'rotate(0deg)';
+            }
+        });
+    });
+
+    if (dropdownList) {
+        observer.observe(dropdownList, {
+            attributes: true,
+            attributeFilter: ['class']
         });
     }
 
     function closeDropdown() {
-        if (dropdown) dropdown.classList.remove('w--open');
-        if (dropdownList) dropdownList.classList.remove('w--open');
-        if (dropdownToggle) dropdownToggle.classList.remove('w--open');
-        if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
-        isOpen = false;
-        
-        // Trigger a click event on the toggle to reset Webflow's internal state
-        setTimeout(() => {
-            if (dropdownToggle) {
-                const clickEvent = new MouseEvent('click', {
-                    bubbles: true,
-                    cancelable: true,
-                    view: window
-                });
-                dropdownToggle.dispatchEvent(clickEvent);
-            }
-        }, 100);
+        // Use Webflow's built-in close functionality
+        if (dropdownToggle && dropdownList.classList.contains('w--open')) {
+            dropdownToggle.click();
+        }
     }
 
     // Handle location changes

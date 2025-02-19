@@ -60,7 +60,7 @@ function updateWeatherDisplay(weather) {
 // Set up dropdown functionality
 function setupDropdown() {
     const dropdown = document.querySelector('.weather-dropdown');
-    const dropdownList = document.querySelector('.weather-dropdown-list');
+    const dropdownList = document.querySelector('.dropdown-list');
     const dropdownToggle = document.querySelector('.dropdown-toggle');
     const dropdownIcon = document.querySelector('.dropdown-icon');
     const placeLabel = document.querySelector('.widget-place');
@@ -79,6 +79,14 @@ function setupDropdown() {
         });
     }
 
+    function closeDropdown() {
+        if (dropdown) dropdown.classList.remove('w--open');
+        if (dropdownList) dropdownList.classList.remove('w--open');
+        if (dropdownToggle) dropdownToggle.classList.remove('w--open');
+        if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
+        isOpen = false;
+    }
+
     // Handle location changes
     if (dombasLink) {
         dombasLink.addEventListener('click', (e) => {
@@ -86,12 +94,7 @@ function setupDropdown() {
             currentLocation = locations.dombas;
             if (placeLabel) placeLabel.textContent = currentLocation.name;
             fetchWeather(currentLocation);
-            
-            // Close dropdown
-            if (dropdown) dropdown.classList.remove('w--open');
-            if (dropdownList) dropdownList.classList.remove('w--open');
-            if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
-            isOpen = false;
+            closeDropdown();
         });
     }
 
@@ -101,12 +104,7 @@ function setupDropdown() {
             currentLocation = locations.lillehammer;
             if (placeLabel) placeLabel.textContent = currentLocation.name;
             fetchWeather(currentLocation);
-            
-            // Close dropdown
-            if (dropdown) dropdown.classList.remove('w--open');
-            if (dropdownList) dropdownList.classList.remove('w--open');
-            if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
-            isOpen = false;
+            closeDropdown();
         });
     }
 }

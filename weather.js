@@ -146,6 +146,7 @@ function updateWeatherDisplay(weather) {
         const symbolCode = weatherSymbolKeys[weather.symbol] || '01d';
         console.log('Weather symbol code:', weather.symbol);
         console.log('Mapped symbol code:', symbolCode);
+        console.log('Fetching from:', `https://nrkno.github.io/yr-weather-symbols/symbols/outline/${symbolCode}.svg`);
         
         fetch(`https://nrkno.github.io/yr-weather-symbols/symbols/outline/${symbolCode}.svg`)
             .then(response => {

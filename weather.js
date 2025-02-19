@@ -59,6 +59,7 @@ function updateWeatherDisplay(weather) {
 
 // Set up dropdown functionality
 function setupDropdown() {
+    const dropdown = document.querySelector('.weather-dropdown');
     const dropdownToggle = document.querySelector('.dropdown-toggle');
     const dropdownIcon = document.querySelector('.dropdown-icon');
     const placeLabel = document.querySelector('.widget-place');
@@ -67,7 +68,7 @@ function setupDropdown() {
     
     let isOpen = false;
 
-    // Toggle dropdown icon rotation
+    // Toggle dropdown icon rotation and Webflow's dropdown class
     if (dropdownToggle) {
         dropdownToggle.addEventListener('click', () => {
             isOpen = !isOpen;
@@ -84,6 +85,11 @@ function setupDropdown() {
             currentLocation = locations.dombas;
             if (placeLabel) placeLabel.textContent = currentLocation.name;
             fetchWeather(currentLocation);
+            
+            // Close dropdown
+            if (dropdown) dropdown.classList.remove('w--open');
+            if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
+            isOpen = false;
         });
     }
 
@@ -93,6 +99,11 @@ function setupDropdown() {
             currentLocation = locations.lillehammer;
             if (placeLabel) placeLabel.textContent = currentLocation.name;
             fetchWeather(currentLocation);
+            
+            // Close dropdown
+            if (dropdown) dropdown.classList.remove('w--open');
+            if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
+            isOpen = false;
         });
     }
 }

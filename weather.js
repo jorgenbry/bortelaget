@@ -149,7 +149,7 @@ function updateWeatherDisplay(weather) {
         const symbolCode = weatherSymbolKeys[weather.symbol] || '01d';
         console.log('Fetching symbol:', symbolCode);
         
-        fetch(`/icons/${symbolCode}.svg`)
+        fetch(`https://bortelaget.vercel.app/icons/${symbolCode}.svg`)
             .then(response => {
                 console.log('SVG response:', response.status);
                 return response.text();

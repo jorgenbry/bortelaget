@@ -215,6 +215,18 @@ function setupDropdown() {
         if (dropdownToggle) dropdownToggle.classList.remove('w--open');
         if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
         isOpen = false;
+        
+        // Trigger a click event on the toggle to reset Webflow's internal state
+        setTimeout(() => {
+            if (dropdownToggle) {
+                const clickEvent = new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                });
+                dropdownToggle.dispatchEvent(clickEvent);
+            }
+        }, 100);
     }
 
     // Handle location changes

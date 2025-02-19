@@ -34,7 +34,7 @@ function updateWeatherDisplay(weather) {
     };
 
     if (elements.temp) elements.temp.textContent = `${weather.temperature}°`;
-    if (elements.precip) elements.precip.textContent = `${weather.precipitation} mm/h`;
+    if (elements.precip) elements.precip.textContent = `${weather.precipitation} mm`;
     if (elements.windSpeed) elements.windSpeed.textContent = `${weather.windSpeed} m/s`;
     if (elements.windDir) elements.windDir.style.transform = `rotate(${weather.windDirection + 180}deg)`;
     if (elements.symbol) elements.symbol.src = `path/to/weather-icons/${weather.symbol}.svg`;

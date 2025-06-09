@@ -3,7 +3,7 @@ const config = {
     // API URLs for different environments
     apiUrls: {
         development: 'http://localhost:3001',
-        staging: 'https://bortelaget.vercel.app',
+        staging: 'https://bortelaget.webflow.io',
         production: 'https://bortelaget.no'
     },
     
@@ -133,19 +133,20 @@ const weatherSymbolKeys = {
 // Weather functionality
 async function fetchWeather(location = currentLocation) {
     try {
-        const apiUrl = config.getApiUrl();
-        console.log('Current environment:', config.getEnvironment());
-        console.log('Using API URL:', apiUrl);
         console.log('Fetching weather for:', location);
         
-        const response = await fetch(`${apiUrl}/api/weather?lat=${location.lat}&lon=${location.lon}`, {
-            headers: {
-                'Accept': 'application/json'
+        // Direct call to MET API
+        const response = await fetch(
+            `https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${location.lat}&lon=${location.lon}`,
+            {
+                headers: {
+                    'User-Agent': 'Bortelaget/1.0 (https://bortelaget.no)',
+                    'Accept': 'application/json'
+                }
             }
-        });
+        );
         
         console.log('API Response status:', response.status);
-        console.log('API Response headers:', Object.fromEntries(response.headers.entries()));
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -209,10 +210,11 @@ function updateWeatherDisplay(weather) {
     
     if (elements.symbol) {
         const symbolCode = weatherSymbolKeys[weather.symbol] || '01d';
-        console.log('Fetching symbol:', symbolCode);
+        console.log('Using symbol:', symbolCode);
         
-        const apiUrl = config.getApiUrl();
-        fetch(`${apiUrl}/icons/${symbolCode}.svg`)
+        // Use a CDN for weather icons
+        const iconUrl = `https://cdn.jsdelivr.net/gh/ekalinin/weathericons@master/svg/${symbolCode}.svg`;
+        fetch(iconUrl)
             .then(response => {
                 console.log('SVG response:', response.status);
                 return response.text();

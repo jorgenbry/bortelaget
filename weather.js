@@ -105,7 +105,7 @@ const weatherSymbolKeys = {
 // Weather functionality
 async function fetchWeather(location = currentLocation) {
     try {
-        const response = await fetch(`/api/weather?lat=${location.lat}&lon=${location.lon}`);
+        const response = await fetch(`https://bortelaget.vercel.app/api/weather?lat=${location.lat}&lon=${location.lon}`);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

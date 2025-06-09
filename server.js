@@ -6,82 +6,68 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Enable CORS for all necessary domains
+// Enable CORS for Webflow domain
 app.use(cors({
-    origin: [
-        'https://bortelaget.webflow.io',
-        'https://bortelaget.vercel.app',
-        'https://bortelaget.no',
-        'http://localhost:3000'
-    ],
-    methods: ['GET'],
-    allowedHeaders: ['Content-Type', 'Accept']
+    origin: ['https://bortelaget.webflow.io', 'https://bortelaget.no', 'https://bortelaget.vercel.app']
 }));
 
-// Logging middleware
-app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
-    console.log('Headers:', req.headers);
-    next();
+// Serve static files
+app.get('/bortelaget-scripts.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'bortelaget-scripts.js'));
 });
 
-// Serve static files from the icons directory
-app.use('/icons', express.static(path.join(__dirname, 'icons')));
+app.get('/weather.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'weather.js'));
+});
 
-// Basic route for testing
-app.get('/', (req, res) => {
-    res.send('Weather API is running');
+app.get('/youtube-player.js', (req, res) => {
+    res.setHeader('Content-Type', 'application/javascript');
+    res.sendFile(path.join(__dirname, 'youtube-player.js'));
 });
 
 // Weather API endpoint
 app.get('/api/weather', async (req, res) => {
-    const { lat, lon } = req.query;
-    console.log('Weather request received:', { lat, lon });
-
-    if (!lat || !lon) {
-        console.error('Missing parameters:', { lat, lon });
-        return res.status(400).json({ error: 'Missing lat or lon parameters' });
-    }
-
     try {
-        const metUrl = `https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${lat}&lon=${lon}`;
-        console.log('Fetching from MET:', metUrl);
+        const { lat, lon } = req.query;
         
-        const response = await fetch(metUrl, {
-            headers: {
-                'User-Agent': 'Bortelaget/1.0 (https://bortelaget.no)'
-            }
-        });
+        if (!lat || !lon) {
+            return res.status(400).json({ error: 'Missing lat or lon parameters' });
+        }
 
-        console.log('MET API response status:', response.status);
-        console.log('MET API response headers:', Object.fromEntries(response.headers.entries()));
+        const response = await fetch(
+            `https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`,
+            {
+                headers: {
+                    'User-Agent': 'Bortelaget Weather Widget (bortelaget.no)'
+                }
+            }
+        );
 
         if (!response.ok) {
-            throw new Error(`Weather API responded with status: ${response.status}`);
+            throw new Error(`MET API responded with status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log('MET API response data structure:', {
-            hasProperties: !!data.properties,
-            hasTimeseries: !!(data.properties && data.properties.timeseries),
-            timeseriesLength: data.properties?.timeseries?.length
-        });
-
         res.json(data);
     } catch (error) {
         console.error('Error fetching weather:', error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Failed to fetch weather data' });
     }
+});
+
+// Serve icons
+app.get('/icons/:filename', (req, res) => {
+    res.sendFile(path.join(__dirname, 'icons', req.params.filename));
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    console.error('Server error:', err);
+    console.error(err.stack);
     res.status(500).json({ error: 'Something broke!' });
 });
 
-// Start the server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
-    console.log(`Test the API at: http://localhost:${port}/api/weather?lat=62.0758&lon=9.1280`);
 }); 

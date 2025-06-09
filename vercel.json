@@ -8,43 +8,12 @@
     ],
     "routes": [
         {
-            "src": "/api/weather",
+            "src": "/(.*)",
             "dest": "/server.js",
             "headers": {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, OPTIONS",
                 "Access-Control-Allow-Headers": "Content-Type, Accept"
-            }
-        },
-        {
-            "src": "/icons/(.*)",
-            "dest": "/server.js",
-            "headers": {
-                "Access-Control-Allow-Origin": "*"
-            }
-        },
-        {
-            "src": "^/bortelaget-scripts\\.js$",
-            "dest": "/bortelaget-scripts.js",
-            "headers": {
-                "Content-Type": "application/javascript",
-                "Access-Control-Allow-Origin": "*"
-            }
-        },
-        {
-            "src": "^/weather\\.js$",
-            "dest": "/weather.js",
-            "headers": {
-                "Content-Type": "application/javascript",
-                "Access-Control-Allow-Origin": "*"
-            }
-        },
-        {
-            "src": "^/youtube-player\\.js$",
-            "dest": "/youtube-player.js",
-            "headers": {
-                "Content-Type": "application/javascript",
-                "Access-Control-Allow-Origin": "*"
             }
         }
     ]

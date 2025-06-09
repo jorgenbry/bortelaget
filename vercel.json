@@ -6,7 +6,7 @@
             "use": "@vercel/node"
         },
         {
-            "src": "*.js",
+            "src": "public/**",
             "use": "@vercel/static"
         }
     ],
@@ -28,12 +28,11 @@
             }
         },
         {
-            "src": "/(.*)\\.js$",
-            "dest": "/$1.js",
-            "headers": {
-                "Content-Type": "application/javascript",
-                "Access-Control-Allow-Origin": "*"
-            }
+            "handle": "filesystem"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/server.js"
         }
     ]
 } 

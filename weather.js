@@ -106,20 +106,36 @@ const weatherSymbolKeys = {
 async function fetchWeather(location = currentLocation) {
     try {
         const apiUrl = config.getApiUrl();
+        console.log('Current environment:', config.getEnvironment());
+        console.log('Using API URL:', apiUrl);
+        console.log('Fetching weather for:', location);
+        
         const response = await fetch(`${apiUrl}/api/weather?lat=${location.lat}&lon=${location.lon}`, {
             headers: {
                 'Accept': 'application/json'
             }
         });
         
+        console.log('API Response status:', response.status);
+        console.log('API Response headers:', Object.fromEntries(response.headers.entries()));
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
-        console.log('Weather data:', data);
+        console.log('Raw weather data:', data);
+        
+        if (!data.properties || !data.properties.timeseries || !data.properties.timeseries[0]) {
+            throw new Error('Invalid weather data structure received');
+        }
         
         const currentWeather = data.properties.timeseries[0].data;
+        console.log('Current weather data:', currentWeather);
+        
+        if (!currentWeather.instant || !currentWeather.instant.details) {
+            throw new Error('Missing weather details in response');
+        }
         
         const weather = {
             temperature: currentWeather.instant.details.air_temperature.toFixed(1).replace('.', ','),
@@ -129,9 +145,20 @@ async function fetchWeather(location = currentLocation) {
             symbol: currentWeather.next_1_hours.summary.symbol_code
         };
 
+        console.log('Processed weather data:', weather);
         updateWeatherDisplay(weather);
     } catch (error) {
         console.error('Error fetching weather:', error);
+        // Show error in the UI
+        const elements = {
+            temp: document.querySelector('.weather-temp'),
+            precip: document.querySelector('.weather-precip'),
+            windSpeed: document.querySelector('.weather-wind-speed')
+        };
+        
+        if (elements.temp) elements.temp.textContent = 'Error';
+        if (elements.precip) elements.precip.textContent = 'Error';
+        if (elements.windSpeed) elements.windSpeed.textContent = 'Error';
     }
 } 
 

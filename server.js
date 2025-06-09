@@ -71,10 +71,22 @@ app.get('/api/weather', async (req, res) => {
 
 // Serve icons
 app.get('/icons/:filename', (req, res) => {
-    res.setHeader('Content-Type', 'image/svg+xml');
-    const filePath = path.join(__dirname, 'icons', req.params.filename);
-    const content = fs.readFileSync(filePath, 'utf8');
-    res.send(content);
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, 'icons', filename);
+    
+    try {
+        if (fs.existsSync(filePath)) {
+            res.setHeader('Content-Type', 'image/svg+xml');
+            const content = fs.readFileSync(filePath, 'utf8');
+            res.send(content);
+        } else {
+            console.error(`Icon not found: ${filename}`);
+            res.status(404).send('Icon not found');
+        }
+    } catch (error) {
+        console.error(`Error serving icon ${filename}:`, error);
+        res.status(500).send('Error serving icon');
+    }
 });
 
 // Error handling middleware

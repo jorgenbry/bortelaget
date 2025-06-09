@@ -145,15 +145,19 @@ async function fetchWeather(location = currentLocation) {
         });
         
         console.log('API Response status:', response.status);
+        console.log('API Response headers:', Object.fromEntries(response.headers.entries()));
         
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            console.error('API Error Response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
         }
         
         const data = await response.json();
         console.log('Raw weather data:', data);
         
         if (!data.properties || !data.properties.timeseries || !data.properties.timeseries[0]) {
+            console.error('Invalid data structure:', data);
             throw new Error('Invalid weather data structure received');
         }
         
@@ -161,15 +165,16 @@ async function fetchWeather(location = currentLocation) {
         console.log('Current weather data:', currentWeather);
         
         if (!currentWeather.instant || !currentWeather.instant.details) {
+            console.error('Missing weather details:', currentWeather);
             throw new Error('Missing weather details in response');
         }
         
         const weather = {
-            temperature: currentWeather.instant.details.air_temperature.toFixed(1).replace('.', ','),
-            precipitation: currentWeather.instant.details.precipitation_rate.toString().replace('.', ','),
-            windDirection: currentWeather.instant.details.wind_from_direction,
-            windSpeed: currentWeather.instant.details.wind_speed.toFixed(1).replace('.', ','),
-            symbol: currentWeather.next_1_hours.summary.symbol_code
+            temperature: currentWeather.instant.details.air_temperature?.toFixed(1).replace('.', ',') || '0',
+            precipitation: currentWeather.instant.details.precipitation_rate?.toString().replace('.', ',') || '0',
+            windDirection: currentWeather.instant.details.wind_from_direction || 0,
+            windSpeed: currentWeather.instant.details.wind_speed?.toFixed(1).replace('.', ',') || '0',
+            symbol: currentWeather.next_1_hours?.summary?.symbol_code || 'clearsky_day'
         };
 
         console.log('Processed weather data:', weather);
@@ -180,12 +185,16 @@ async function fetchWeather(location = currentLocation) {
         const elements = {
             temp: document.querySelector('.weather-temp'),
             precip: document.querySelector('.weather-precip'),
-            windSpeed: document.querySelector('.weather-wind-speed')
+            windSpeed: document.querySelector('.weather-wind-speed'),
+            windDir: document.querySelector('.weather-wind-dir'),
+            symbol: document.querySelector('.weather-symbol')
         };
         
         if (elements.temp) elements.temp.textContent = 'Error';
         if (elements.precip) elements.precip.textContent = 'Error';
         if (elements.windSpeed) elements.windSpeed.textContent = 'Error';
+        if (elements.windDir) elements.windDir.style.transform = 'rotate(0deg)';
+        if (elements.symbol) elements.symbol.innerHTML = '';
     }
 } 
 

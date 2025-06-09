@@ -105,11 +105,11 @@ const weatherSymbolKeys = {
 // Weather functionality
 async function fetchWeather(location = currentLocation) {
     try {
-        const response = await fetch(`https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${location.lat}&lon=${location.lon}`, {
-            headers: {
-                'User-Agent': 'Bortelaget/1.0 (https://bortelaget.no)'
-            }
-        });
+        const response = await fetch(`/api/weather?lat=${location.lat}&lon=${location.lon}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
         const data = await response.json();
         const currentWeather = data.properties.timeseries[0].data;

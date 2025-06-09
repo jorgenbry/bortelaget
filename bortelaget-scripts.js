@@ -4,3 +4,4 @@ import 'https://bortelaget.vercel.app/youtube-player.js';
 $('.nav-show').on('click', function() {
     $('.w-nav-button').trigger('click');
     });
+

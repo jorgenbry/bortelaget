@@ -243,6 +243,15 @@ function setupNavigation() {
 }
 
 // Location dropdown functionality
+function updateLocationNameDisplay(locationKey) {
+    const name = weatherConfig.locations[locationKey]?.name || '';
+    const nameEls = [
+        document.querySelector('.weather-location-name'),
+        document.querySelector('.widget-place')
+    ];
+    nameEls.forEach(el => { if (el) el.textContent = name; });
+}
+
 function setupWeatherLocationDropdown() {
     const dropdown = document.querySelector('.weather-location');
     if (!dropdown) return;
@@ -250,38 +259,28 @@ function setupWeatherLocationDropdown() {
         const selected = dropdown.value;
         if (weatherConfig.locations[selected]) {
             weatherConfig.currentLocation = selected;
-            // Update location name in widget if element exists
-            const nameEl = document.querySelector('.weather-location-name');
-            if (nameEl) nameEl.textContent = weatherConfig.locations[selected].name;
+            updateLocationNameDisplay(selected);
             fetchWeather();
         }
     });
-    // Set initial name
-    const nameEl = document.querySelector('.weather-location-name');
-    if (nameEl) nameEl.textContent = weatherConfig.locations[weatherConfig.currentLocation].name;
+    updateLocationNameDisplay(weatherConfig.currentLocation);
 }
 
-// Location link functionality for dropdown-place anchors
 function setupWeatherLocationLinks() {
     const links = document.querySelectorAll('.dropdown-place');
     links.forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
-            // Find the location key from the class list
             const locationKeys = Object.keys(weatherConfig.locations);
             const foundKey = locationKeys.find(key => link.classList.contains(key));
             if (foundKey) {
                 weatherConfig.currentLocation = foundKey;
-                // Update location name in widget if element exists
-                const nameEl = document.querySelector('.weather-location-name');
-                if (nameEl) nameEl.textContent = weatherConfig.locations[foundKey].name;
+                updateLocationNameDisplay(foundKey);
                 fetchWeather();
             }
         });
     });
-    // Set initial name
-    const nameEl = document.querySelector('.weather-location-name');
-    if (nameEl) nameEl.textContent = weatherConfig.locations[weatherConfig.currentLocation].name;
+    updateLocationNameDisplay(weatherConfig.currentLocation);
 }
 
 // Initialize everything

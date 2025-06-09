@@ -6,9 +6,11 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Enable CORS for Webflow domain
+// Enable CORS for all domains
 app.use(cors({
-    origin: ['https://bortelaget.webflow.io', 'https://bortelaget.no', 'https://bortelaget.vercel.app']
+    origin: '*',
+    methods: ['GET', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Accept']
 }));
 
 // Serve static files

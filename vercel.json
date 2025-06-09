@@ -24,7 +24,7 @@
             }
         },
         {
-            "src": "/bortelaget-scripts.js",
+            "src": "^/bortelaget-scripts\\.js$",
             "dest": "/bortelaget-scripts.js",
             "headers": {
                 "Content-Type": "application/javascript",
@@ -32,7 +32,7 @@
             }
         },
         {
-            "src": "/weather.js",
+            "src": "^/weather\\.js$",
             "dest": "/weather.js",
             "headers": {
                 "Content-Type": "application/javascript",
@@ -40,7 +40,7 @@
             }
         },
         {
-            "src": "/youtube-player.js",
+            "src": "^/youtube-player\\.js$",
             "dest": "/youtube-player.js",
             "headers": {
                 "Content-Type": "application/javascript",

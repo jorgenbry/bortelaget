@@ -23,7 +23,8 @@ export async function GET(request) {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': 'https://bortelaget.webflow.io',
                 'Access-Control-Allow-Methods': 'GET, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type'
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Vary': 'Origin'
             }
         });
     } catch (error) {
@@ -33,7 +34,8 @@ export async function GET(request) {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': 'https://bortelaget.webflow.io',
                 'Access-Control-Allow-Methods': 'GET, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type'
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Vary': 'Origin'
             }
         });
     }
@@ -45,7 +47,8 @@ export async function OPTIONS() {
         headers: {
             'Access-Control-Allow-Origin': 'https://bortelaget.webflow.io',
             'Access-Control-Allow-Methods': 'GET, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Vary': 'Origin'
         }
     });
 } 

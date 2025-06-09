@@ -48,6 +48,10 @@ body {
   border: none;
   pointer-events: none; /* Prevents hover interactions */
 }
+.player.story .player-wrapper {
+  height: 100% !important;
+  padding-bottom: 0 !important;
+}
 
 iframe .ytp-chrome-top,
 iframe .ytp-chrome-bottom,

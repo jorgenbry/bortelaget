@@ -242,10 +242,30 @@ function setupNavigation() {
     }
 }
 
+// Location dropdown functionality
+function setupWeatherLocationDropdown() {
+    const dropdown = document.querySelector('.weather-location');
+    if (!dropdown) return;
+    dropdown.addEventListener('change', function () {
+        const selected = dropdown.value;
+        if (weatherConfig.locations[selected]) {
+            weatherConfig.currentLocation = selected;
+            // Update location name in widget if element exists
+            const nameEl = document.querySelector('.weather-location-name');
+            if (nameEl) nameEl.textContent = weatherConfig.locations[selected].name;
+            fetchWeather();
+        }
+    });
+    // Set initial name
+    const nameEl = document.querySelector('.weather-location-name');
+    if (nameEl) nameEl.textContent = weatherConfig.locations[weatherConfig.currentLocation].name;
+}
+
 // Initialize everything
 document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     setupYouTubePlayer();
+    setupWeatherLocationDropdown();
     fetchWeather();
     setInterval(fetchWeather, 5 * 60 * 1000);
 });

@@ -105,13 +105,20 @@ const weatherSymbolKeys = {
 // Weather functionality
 async function fetchWeather(location = currentLocation) {
     try {
-        const response = await fetch(`https://bortelaget.no/api/weather?lat=${location.lat}&lon=${location.lon}`);
+        const apiUrl = config.getApiUrl();
+        const response = await fetch(`${apiUrl}/api/weather?lat=${location.lat}&lon=${location.lon}`, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
+        console.log('Weather data:', data);
+        
         const currentWeather = data.properties.timeseries[0].data;
         
         const weather = {
@@ -149,7 +156,8 @@ function updateWeatherDisplay(weather) {
         const symbolCode = weatherSymbolKeys[weather.symbol] || '01d';
         console.log('Fetching symbol:', symbolCode);
         
-        fetch(`https://bortelaget.no/icons/${symbolCode}.svg`)
+        const apiUrl = config.getApiUrl();
+        fetch(`${apiUrl}/icons/${symbolCode}.svg`)
             .then(response => {
                 console.log('SVG response:', response.status);
                 return response.text();

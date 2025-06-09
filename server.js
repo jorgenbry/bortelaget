@@ -13,7 +13,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Accept']
 }));
 
-// Serve static files
+// Serve static files with proper MIME types
 app.get('/bortelaget-scripts.js', (req, res) => {
     res.setHeader('Content-Type', 'application/javascript');
     res.sendFile(path.join(__dirname, 'bortelaget-scripts.js'));
@@ -27,6 +27,11 @@ app.get('/weather.js', (req, res) => {
 app.get('/youtube-player.js', (req, res) => {
     res.setHeader('Content-Type', 'application/javascript');
     res.sendFile(path.join(__dirname, 'youtube-player.js'));
+});
+
+app.get('/dist/css/bortelaget-style.css', (req, res) => {
+    res.setHeader('Content-Type', 'text/css');
+    res.sendFile(path.join(__dirname, 'dist', 'css', 'bortelaget-style.css'));
 });
 
 // Weather API endpoint

@@ -1,13 +1,32 @@
 {
     "version": 2,
+    "builds": [
+        {
+            "src": "server.js",
+            "use": "@vercel/node"
+        }
+    ],
     "routes": [
         {
-            "src": "/(.*)",
+            "src": "/api/(.*)",
+            "dest": "/server.js"
+        },
+        {
+            "src": "/icons/(.*)",
+            "dest": "/server.js"
+        },
+        {
+            "src": "/bortelaget-scripts.js",
             "dest": "/server.js",
             "headers": {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Accept"
+                "Content-Type": "application/javascript"
+            }
+        },
+        {
+            "src": "/dist/css/bortelaget-style.css",
+            "dest": "/server.js",
+            "headers": {
+                "Content-Type": "text/css"
             }
         }
     ]

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -16,7 +17,9 @@ app.use(cors({
 // Serve static files with proper MIME types
 app.get('/bortelaget-scripts.js', (req, res) => {
     res.setHeader('Content-Type', 'application/javascript');
-    res.sendFile(path.join(__dirname, 'bortelaget-scripts.js'));
+    const filePath = path.join(__dirname, 'bortelaget-scripts.js');
+    const content = fs.readFileSync(filePath, 'utf8');
+    res.send(content);
 });
 
 app.get('/weather.js', (req, res) => {
@@ -31,7 +34,9 @@ app.get('/youtube-player.js', (req, res) => {
 
 app.get('/dist/css/bortelaget-style.css', (req, res) => {
     res.setHeader('Content-Type', 'text/css');
-    res.sendFile(path.join(__dirname, 'dist', 'css', 'bortelaget-style.css'));
+    const filePath = path.join(__dirname, 'dist', 'css', 'bortelaget-style.css');
+    const content = fs.readFileSync(filePath, 'utf8');
+    res.send(content);
 });
 
 // Weather API endpoint
@@ -67,7 +72,9 @@ app.get('/api/weather', async (req, res) => {
 // Serve icons
 app.get('/icons/:filename', (req, res) => {
     res.setHeader('Content-Type', 'image/svg+xml');
-    res.sendFile(path.join(__dirname, 'icons', req.params.filename));
+    const filePath = path.join(__dirname, 'icons', req.params.filename);
+    const content = fs.readFileSync(filePath, 'utf8');
+    res.send(content);
 });
 
 // Error handling middleware

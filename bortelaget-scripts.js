@@ -261,11 +261,35 @@ function setupWeatherLocationDropdown() {
     if (nameEl) nameEl.textContent = weatherConfig.locations[weatherConfig.currentLocation].name;
 }
 
+// Location link functionality for dropdown-place anchors
+function setupWeatherLocationLinks() {
+    const links = document.querySelectorAll('.dropdown-place');
+    links.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            // Find the location key from the class list
+            const locationKeys = Object.keys(weatherConfig.locations);
+            const foundKey = locationKeys.find(key => link.classList.contains(key));
+            if (foundKey) {
+                weatherConfig.currentLocation = foundKey;
+                // Update location name in widget if element exists
+                const nameEl = document.querySelector('.weather-location-name');
+                if (nameEl) nameEl.textContent = weatherConfig.locations[foundKey].name;
+                fetchWeather();
+            }
+        });
+    });
+    // Set initial name
+    const nameEl = document.querySelector('.weather-location-name');
+    if (nameEl) nameEl.textContent = weatherConfig.locations[weatherConfig.currentLocation].name;
+}
+
 // Initialize everything
 document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     setupYouTubePlayer();
     setupWeatherLocationDropdown();
+    setupWeatherLocationLinks();
     fetchWeather();
     setInterval(fetchWeather, 5 * 60 * 1000);
 });

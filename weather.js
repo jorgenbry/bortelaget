@@ -196,8 +196,9 @@ async function fetchWeather(location = currentLocation) {
         if (elements.windDir) elements.windDir.style.transform = 'rotate(0deg)';
         if (elements.symbol) elements.symbol.innerHTML = '';
     }
-} 
+}
 
+// Update weather display
 function updateWeatherDisplay(weather) {
     const elements = {
         temp: document.querySelector('.weather-temp'),
@@ -207,125 +208,58 @@ function updateWeatherDisplay(weather) {
         symbol: document.querySelector('.weather-symbol')
     };
 
-    console.log('Weather data received:', weather);
-    console.log('Found symbol element:', elements.symbol);
-
-    if (elements.temp) elements.temp.textContent = `${weather.temperature}°`;
-    if (elements.precip) elements.precip.textContent = `${weather.precipitation} mm/h`;
-    if (elements.windSpeed) elements.windSpeed.textContent = `${weather.windSpeed} m/s`;
-    if (elements.windDir) elements.windDir.style.transform = `rotate(${weather.windDirection + 180}deg)`;
-    
+    if (elements.temp) elements.temp.textContent = weather.temperature;
+    if (elements.precip) elements.precip.textContent = weather.precipitation;
+    if (elements.windSpeed) elements.windSpeed.textContent = weather.windSpeed;
+    if (elements.windDir) elements.windDir.style.transform = `rotate(${weather.windDirection}deg)`;
     if (elements.symbol) {
         const symbolCode = weatherSymbolKeys[weather.symbol] || '01d';
-        console.log('Using symbol:', symbolCode);
-        
-        // Use a CDN for weather icons
-        const iconUrl = `https://cdn.jsdelivr.net/gh/ekalinin/weathericons@master/svg/${symbolCode}.svg`;
-        fetch(iconUrl)
-            .then(response => {
-                console.log('SVG response:', response.status);
-                return response.text();
-            })
-            .then(svgContent => {
-                console.log('SVG content received, length:', svgContent.length);
-                
-                // Create a wrapper div to safely parse the SVG
-                const wrapper = document.createElement('div');
-                wrapper.innerHTML = svgContent;
-                
-                // Get the SVG element
-                const svg = wrapper.querySelector('svg');
-                if (svg) {
-                    // Add any desired classes or attributes
-                    svg.classList.add('weather-symbol-svg');
-                    svg.setAttribute('width', '40');
-                    svg.setAttribute('height', '40');
-                    svg.setAttribute('aria-label', weather.symbol.replace(/_/g, ' '));
-                    
-                    // Replace the current content with the new SVG
-                    elements.symbol.innerHTML = '';
-                    elements.symbol.appendChild(svg);
-                    console.log('SVG inserted into DOM');
-                } else {
-                    console.log('No SVG element found in response');
-                }
-            })
-            .catch(error => console.error('Error loading weather icon:', error));
-    } else {
-        console.log('Weather symbol element not found in DOM');
+        elements.symbol.innerHTML = `<img src="https://bortelaget.vercel.app/icons/${symbolCode}.svg" alt="${weather.symbol}">`;
     }
 }
 
-// Set up dropdown functionality
+// Set up location dropdown
 function setupDropdown() {
     const dropdown = document.querySelector('.weather-dropdown');
-    const dropdownList = document.querySelector('nav.dropdown-list.w-dropdown-list');
-    const dropdownToggle = document.querySelector('.dropdown-toggle');
-    const dropdownIcon = document.querySelector('.dropdown-icon');
-    const placeLabel = document.querySelector('.widget-place');
-    const dombasLink = document.querySelector('.dombas');
-    const lillehammerLink = document.querySelector('.lillehammer');
+    const dropdownContent = document.querySelector('.weather-dropdown-content');
+    const locationText = document.querySelector('.weather-location');
 
-    // Watch for Webflow's dropdown state changes
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.target.classList.contains('w--open')) {
-                dropdownIcon.style.transform = 'rotate(180deg)';
-            } else {
-                dropdownIcon.style.transform = 'rotate(0deg)';
+    if (!dropdown || !dropdownContent || !locationText) return;
+
+    // Set initial location
+    locationText.textContent = currentLocation.name;
+
+    // Toggle dropdown
+    dropdown.addEventListener('click', function() {
+        dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!dropdown.contains(event.target)) {
+            dropdownContent.style.display = 'none';
+        }
+    });
+
+    // Handle location selection
+    const locationItems = dropdownContent.querySelectorAll('.weather-location-item');
+    locationItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const locationName = this.getAttribute('data-location');
+            if (locations[locationName]) {
+                currentLocation = locations[locationName];
+                locationText.textContent = currentLocation.name;
+                dropdownContent.style.display = 'none';
+                fetchWeather(currentLocation);
             }
         });
     });
-
-    if (dropdownList) {
-        observer.observe(dropdownList, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-    }
-
-    function closeDropdown() {
-        // Remove Webflow's open classes
-        if (dropdown) dropdown.classList.remove('w--open');
-        if (dropdownList) dropdownList.classList.remove('w--open');
-        if (dropdownToggle) dropdownToggle.classList.remove('w--open');
-        
-        // Reset the icon rotation
-        if (dropdownIcon) dropdownIcon.style.transform = 'rotate(0deg)';
-        
-        // Reset Webflow's internal state
-        if (dropdownToggle) {
-            dropdownToggle.setAttribute('aria-expanded', 'false');
-        }
-    }
-
-    // Handle location changes
-    if (dombasLink) {
-        dombasLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentLocation = locations.dombas;
-            if (placeLabel) placeLabel.textContent = currentLocation.name;
-            fetchWeather(currentLocation);
-            closeDropdown();
-        });
-    }
-
-    if (lillehammerLink) {
-        lillehammerLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentLocation = locations.lillehammer;
-            if (placeLabel) placeLabel.textContent = currentLocation.name;
-            fetchWeather(currentLocation);
-            closeDropdown();
-        });
-    }
 }
 
-// Initialize everything
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize weather functionality
+document.addEventListener('DOMContentLoaded', function() {
     setupDropdown();
-    fetchWeather(currentLocation);
-    
-    // Update every 5 minutes
-    setInterval(() => fetchWeather(currentLocation), 5 * 60 * 1000);
+    fetchWeather();
+    // Refresh weather every 5 minutes
+    setInterval(fetchWeather, 5 * 60 * 1000);
 });

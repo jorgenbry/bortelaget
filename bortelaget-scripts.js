@@ -9,10 +9,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const youtubeScript = document.createElement('script');
     youtubeScript.src = 'https://bortelaget.vercel.app/youtube-player.js';
     document.head.appendChild(youtubeScript);
-});
 
-// Navigation menu
-$('.nav-show').on('click', function() {
-    $('.w-nav-button').trigger('click');
+    // Navigation menu
+    const navShow = document.querySelector('.nav-show');
+    const navButton = document.querySelector('.w-nav-button');
+    if (navShow && navButton) {
+        navShow.addEventListener('click', function() {
+            navButton.click();
+        });
+    }
 });
 

@@ -1,4 +1,3 @@
-
 // Store buttons globally
 let buttons = null;
 
@@ -29,6 +28,18 @@ function initYoutubePlayer() {
     // Update iframe src to enable API
     let srcUrl = new URL(iframe.src);
     srcUrl.searchParams.set('enablejsapi', '1');
+    srcUrl.searchParams.set('controls', '0');
+    srcUrl.searchParams.set('modestbranding', '1');
+    srcUrl.searchParams.set('showinfo', '0');
+    srcUrl.searchParams.set('rel', '0');
+    srcUrl.searchParams.set('iv_load_policy', '3');
+    srcUrl.searchParams.set('fs', '0');
+    srcUrl.searchParams.set('playsinline', '1');
+    srcUrl.searchParams.set('disablekb', '1');
+    srcUrl.searchParams.set('autoplay', '1');
+    srcUrl.searchParams.set('mute', '1');
+    srcUrl.searchParams.set('loop', '0');
+    srcUrl.searchParams.set('cc_load_policy', '0');
     srcUrl.searchParams.set('origin', window.location.origin);
     iframe.src = srcUrl.toString();
 

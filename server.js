@@ -66,6 +66,7 @@ app.get('/api/weather', async (req, res) => {
 
 // Serve icons
 app.get('/icons/:filename', (req, res) => {
+    res.setHeader('Content-Type', 'image/svg+xml');
     res.sendFile(path.join(__dirname, 'icons', req.params.filename));
 });
 

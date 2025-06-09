@@ -3,7 +3,7 @@ const config = {
     // API URLs for different environments
     apiUrls: {
         development: 'http://localhost:3001',
-        staging: 'https://bortelaget.webflow.io',
+        staging: 'https://bortelaget.vercel.app',
         production: 'https://bortelaget.no'
     },
     
@@ -133,18 +133,16 @@ const weatherSymbolKeys = {
 // Weather functionality
 async function fetchWeather(location = currentLocation) {
     try {
+        const apiUrl = config.getApiUrl();
+        console.log('Current environment:', config.getEnvironment());
+        console.log('Using API URL:', apiUrl);
         console.log('Fetching weather for:', location);
         
-        // Direct call to MET API
-        const response = await fetch(
-            `https://api.met.no/weatherapi/nowcast/2.0/complete?lat=${location.lat}&lon=${location.lon}`,
-            {
-                headers: {
-                    'User-Agent': 'Bortelaget/1.0 (https://bortelaget.no)',
-                    'Accept': 'application/json'
-                }
+        const response = await fetch(`${apiUrl}/api/weather?lat=${location.lat}&lon=${location.lon}`, {
+            headers: {
+                'Accept': 'application/json'
             }
-        );
+        });
         
         console.log('API Response status:', response.status);
         

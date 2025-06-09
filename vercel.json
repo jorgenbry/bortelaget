@@ -4,10 +4,6 @@
         {
             "src": "server.js",
             "use": "@vercel/node"
-        },
-        {
-            "src": "*.js",
-            "use": "@vercel/static"
         }
     ],
     "routes": [
@@ -28,8 +24,24 @@
             }
         },
         {
-            "src": "/(.*)\\.js$",
-            "dest": "/$1.js",
+            "src": "/bortelaget-scripts.js",
+            "dest": "/bortelaget-scripts.js",
+            "headers": {
+                "Content-Type": "application/javascript",
+                "Access-Control-Allow-Origin": "*"
+            }
+        },
+        {
+            "src": "/weather.js",
+            "dest": "/weather.js",
+            "headers": {
+                "Content-Type": "application/javascript",
+                "Access-Control-Allow-Origin": "*"
+            }
+        },
+        {
+            "src": "/youtube-player.js",
+            "dest": "/youtube-player.js",
             "headers": {
                 "Content-Type": "application/javascript",
                 "Access-Control-Allow-Origin": "*"

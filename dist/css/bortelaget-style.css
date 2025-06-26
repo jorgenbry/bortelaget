@@ -27,6 +27,15 @@ body {
   margin-top: 0;
 }
 
+.brenner-dropdown-icon {
+  transition: transform 0.3s ease-in-out;
+}
+
+.w--open .brenner-dropdown-icon {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease-in-out;
+}
+
 .player {
   position: relative;
   width: 100%;

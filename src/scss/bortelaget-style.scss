@@ -32,6 +32,15 @@ body {
   }
 }
 
+.brenner-dropdown-icon {
+  transition: transform 0.3s ease-in-out;
+}
+
+.w--open .brenner-dropdown-icon {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease-in-out;
+}
+
 
 // YouTube player container
 .player {

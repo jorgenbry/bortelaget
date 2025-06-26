@@ -32,6 +32,8 @@ body {
   }
 }
 
+
+
 .brenner-dropdown-icon {
   transition: transform 0.3s ease-in-out;
 }
@@ -115,4 +117,21 @@ iframe {
 .weather-symbol-svg {
   width: 100%;
   height: 100%;
+}
+
+// Tab label bullets for Webflow tabs
+.tab-label {
+  &::before {
+    content: "○ ";
+  }
+}
+.w--current .tab-label::before {
+  content: "● ";
+}
+
+.w-tab-link {
+  background: var(--color-primitives--røsslyng-15);
+  &:hover {
+    background: var(--color-primitives--røsslyng-40);
+  }
 }

@@ -130,9 +130,9 @@ iframe {
 }
 
 .w-tab-link, .w-tab-link.w--current {
-  background: var(--color-primitives--røsslyng-15);
+  background: var(--color-primitives--røsslyng-25);
   transition: background 0.3s ease-in-out;
   &:hover {
-    background: var(--color-primitives--røsslyng-40);
+    background: var(--color-primitives--røsslyng);
   }
 }

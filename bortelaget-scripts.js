@@ -156,79 +156,78 @@ function updateWeatherDisplay(weather) {
 }
 
 // YouTube functionality
-function setupYouTubePlayer() {
-    const container = document.querySelector('div[data-video-id]');
-    if (!container) return;
-    const iframe = container.querySelector('iframe');
-    if (!iframe) return;
-    const buttons = {
-        play: document.querySelector('.play-button'),
-        pause: document.querySelector('.pause-button'),
-        soundOn: document.querySelector('.sound-on-button'),
-        soundOff: document.querySelector('.sound-off-button')
-    };
-    // Set initial button states
-    if (buttons.play) buttons.play.style.display = 'none';
-    if (buttons.pause) buttons.pause.style.display = 'flex';
-    if (buttons.soundOn) buttons.soundOn.style.display = 'flex';
-    if (buttons.soundOff) buttons.soundOff.style.display = 'none';
-    // Configure iframe
-    const srcUrl = new URL(iframe.src);
-    srcUrl.searchParams.set('enablejsapi', '1');
-    srcUrl.searchParams.set('controls', '0');
-    srcUrl.searchParams.set('modestbranding', '1');
-    srcUrl.searchParams.set('showinfo', '0');
-    srcUrl.searchParams.set('rel', '0');
-    srcUrl.searchParams.set('iv_load_policy', '3');
-    srcUrl.searchParams.set('fs', '0');
-    srcUrl.searchParams.set('playsinline', '1');
-    srcUrl.searchParams.set('disablekb', '1');
-    srcUrl.searchParams.set('autoplay', '1');
-    srcUrl.searchParams.set('mute', '1');
-    srcUrl.searchParams.set('origin', window.location.origin);
-    const newSrc = srcUrl.toString();
-    iframe.src = newSrc;
-    // Set up button handlers
-    if (buttons.pause) {
-        buttons.pause.onclick = () => {
-            iframe.contentWindow.postMessage(JSON.stringify({
-                event: 'command',
-                func: 'pauseVideo'
-            }), '*');
-            buttons.pause.style.display = 'none';
-            buttons.play.style.display = 'flex';
+function setupYouTubePlayers() {
+    document.querySelectorAll('div[data-video-id]').forEach(container => {
+        const iframe = container.querySelector('iframe');
+        if (!iframe) return;
+        const buttons = {
+            play: container.querySelector('.play-button'),
+            pause: container.querySelector('.pause-button'),
+            soundOn: container.querySelector('.sound-on-button'),
+            soundOff: container.querySelector('.sound-off-button')
         };
-    }
-    if (buttons.play) {
-        buttons.play.onclick = () => {
-            iframe.contentWindow.postMessage(JSON.stringify({
-                event: 'command',
-                func: 'playVideo'
-            }), '*');
-            buttons.play.style.display = 'none';
-            buttons.pause.style.display = 'flex';
-        };
-    }
-    if (buttons.soundOn) {
-        buttons.soundOn.onclick = () => {
-            iframe.contentWindow.postMessage(JSON.stringify({
-                event: 'command',
-                func: 'unMute'
-            }), '*');
-            buttons.soundOn.style.display = 'none';
-            buttons.soundOff.style.display = 'flex';
-        };
-    }
-    if (buttons.soundOff) {
-        buttons.soundOff.onclick = () => {
-            iframe.contentWindow.postMessage(JSON.stringify({
-                event: 'command',
-                func: 'mute'
-            }), '*');
-            buttons.soundOff.style.display = 'none';
-            buttons.soundOn.style.display = 'flex';
-        };
-    }
+        // Set initial button states
+        if (buttons.play) buttons.play.style.display = 'none';
+        if (buttons.pause) buttons.pause.style.display = 'flex';
+        if (buttons.soundOn) buttons.soundOn.style.display = 'flex';
+        if (buttons.soundOff) buttons.soundOff.style.display = 'none';
+        // Configure iframe
+        const srcUrl = new URL(iframe.src);
+        srcUrl.searchParams.set('enablejsapi', '1');
+        srcUrl.searchParams.set('controls', '0');
+        srcUrl.searchParams.set('modestbranding', '1');
+        srcUrl.searchParams.set('showinfo', '0');
+        srcUrl.searchParams.set('rel', '0');
+        srcUrl.searchParams.set('iv_load_policy', '3');
+        srcUrl.searchParams.set('fs', '0');
+        srcUrl.searchParams.set('playsinline', '1');
+        srcUrl.searchParams.set('disablekb', '1');
+        srcUrl.searchParams.set('autoplay', '1');
+        srcUrl.searchParams.set('mute', '1');
+        srcUrl.searchParams.set('origin', window.location.origin);
+        iframe.src = srcUrl.toString();
+        // Set up button handlers
+        if (buttons.pause) {
+            buttons.pause.onclick = () => {
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'pauseVideo'
+                }), '*');
+                buttons.pause.style.display = 'none';
+                buttons.play.style.display = 'flex';
+            };
+        }
+        if (buttons.play) {
+            buttons.play.onclick = () => {
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'playVideo'
+                }), '*');
+                buttons.play.style.display = 'none';
+                buttons.pause.style.display = 'flex';
+            };
+        }
+        if (buttons.soundOn) {
+            buttons.soundOn.onclick = () => {
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'unMute'
+                }), '*');
+                buttons.soundOn.style.display = 'none';
+                buttons.soundOff.style.display = 'flex';
+            };
+        }
+        if (buttons.soundOff) {
+            buttons.soundOff.onclick = () => {
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'mute'
+                }), '*');
+                buttons.soundOff.style.display = 'none';
+                buttons.soundOn.style.display = 'flex';
+            };
+        }
+    });
 }
 
 // Navigation menu
@@ -286,7 +285,7 @@ function setupWeatherLocationLinks() {
 // Initialize everything
 document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
-    setupYouTubePlayer();
+    setupYouTubePlayers();
     setupWeatherLocationDropdown();
     setupWeatherLocationLinks();
     fetchWeather();

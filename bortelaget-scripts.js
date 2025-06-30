@@ -157,15 +157,22 @@ function updateWeatherDisplay(weather) {
 
 // YouTube functionality
 function setupYouTubePlayers() {
-    document.querySelectorAll('div[data-video-id]').forEach(container => {
+    const containers = document.querySelectorAll('div[data-video-id]');
+    console.log('Found video containers:', containers.length);
+    containers.forEach((container, idx) => {
+        console.log(`Setting up player #${idx + 1}`, container);
         const iframe = container.querySelector('iframe');
-        if (!iframe) return;
+        if (!iframe) {
+            console.warn('No iframe found in container', container);
+            return;
+        }
         const buttons = {
             play: container.querySelector('.play-button'),
             pause: container.querySelector('.pause-button'),
             soundOn: container.querySelector('.sound-on-button'),
             soundOff: container.querySelector('.sound-off-button')
         };
+        console.log('Buttons found:', buttons);
         // Set initial button states
         if (buttons.play) buttons.play.style.display = 'none';
         if (buttons.pause) buttons.pause.style.display = 'flex';

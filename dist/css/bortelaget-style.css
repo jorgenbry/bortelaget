@@ -84,6 +84,11 @@ iframe .ytp-chrome-top.ytp-show-cards-title {
   visibility: hidden !important;
 }
 
+.w-richtext figure.w-richtext-figure-type-video, .w-richtext figure[data-rt-type=video] {
+  width: 100%;
+  height: auto;
+}
+
 .player::after {
   content: "";
   position: absolute;

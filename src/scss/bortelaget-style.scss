@@ -99,6 +99,11 @@ iframe {
   }
 }
 
+.w-richtext figure.w-richtext-figure-type-video, .w-richtext figure[data-rt-type="video"] {
+  width: 100%;
+  height: auto;
+}
+
 
 // Additional overlay to prevent hover interactions
 .player::after {

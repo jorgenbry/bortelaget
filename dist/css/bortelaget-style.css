@@ -86,8 +86,9 @@ iframe .ytp-chrome-top.ytp-show-cards-title {
 
 .w-richtext figure.w-richtext-figure-type-video, .w-richtext figure[data-rt-type=video] {
   width: 100%;
-  height: auto;
+  height: auto !important;
   max-width: 100%;
+  aspect-ratio: 16/9;
 }
 
 .player::after {
